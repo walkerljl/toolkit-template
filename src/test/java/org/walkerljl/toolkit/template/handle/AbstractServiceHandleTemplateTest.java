@@ -6,6 +6,7 @@ import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
 import org.walkerljl.toolkit.standard.Message;
 import org.walkerljl.toolkit.standard.exception.AppException;
+import org.walkerljl.toolkit.standard.exception.AppServiceException;
 
 /**
  *
@@ -14,10 +15,10 @@ import org.walkerljl.toolkit.standard.exception.AppException;
  */
 public class AbstractServiceHandleTemplateTest {
 
-    private String checkParamFailedErrorMsg = "参数校验失败";
+    private String checkParamFailedErrorMsg = ServiceErrorCode.INVALID_PARAM.getDescription();
 
     @Test
-    public void handleCaseForNullLogger() {
+    public void testCaseForNullLogger() {
 
         AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
             @Override
@@ -63,7 +64,7 @@ public class AbstractServiceHandleTemplateTest {
     }
 
     @Test
-    public void handleCaseForValidLogger() {
+    public void testCaseForValidLogger() {
 
         AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
             @Override
@@ -109,7 +110,7 @@ public class AbstractServiceHandleTemplateTest {
     }
 
     @Test
-    public void handleCaseForCanRethrowException() {
+    public void testCaseForCanRethrowException() {
 
         AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
             @Override
@@ -187,5 +188,69 @@ public class AbstractServiceHandleTemplateTest {
         Assert.assertTrue(expectedResult);
         Assert.assertNull(expectedMessage);
     }
+
+    @Test
+    public void testCaseForErrorCode() {
+
+        String param = "hello";
+        Object result = "world";
+        AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
+
+            @Override
+            public Logger getLogger() {
+                return null;
+            }
+        };
+        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
+
+            @Override
+            public boolean checkParams(String s) {
+                throw new AppServiceException(ServiceErrorCode.INVALID_PARAM);
+            }
+
+            @Override
+            public Object handle(String s) {
+                return result;
+            }
+        };
+        String customizedErrorMsg = "XX参数未无效";
+        Message<Object> message = serviceHandleTemplate.handle(param, serviceHandler);
+        Assert.assertEquals(message.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(message.getBody(), ServiceErrorCode.INVALID_PARAM.getDescription());
+
+        serviceHandler = new ServiceHandler<String, Object>() {
+
+            @Override
+            public boolean checkParams(String s) {
+                throw new AppServiceException(ServiceErrorCode.INVALID_PARAM, customizedErrorMsg);
+            }
+
+            @Override
+            public Object handle(String s) {
+                return result;
+            }
+        };
+        message = serviceHandleTemplate.handle(param, serviceHandler);
+        Assert.assertEquals(message.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(message.getBody(), customizedErrorMsg);
+
+        serviceHandler = new ServiceHandler<String, Object>() {
+
+            @Override
+            public boolean checkParams(String s) {
+                throw new AppException(ServiceErrorCode.INVALID_PARAM);
+            }
+
+            @Override
+            public Object handle(String s) {
+                return result;
+            }
+        };
+        message = serviceHandleTemplate.handle(param, serviceHandler);
+        Assert.assertEquals(message.getCode(), ServiceErrorCode.UNKOWN.getCode());
+        Assert.assertEquals(message.getBody(), ServiceErrorCode.UNKOWN.getDescription());
+    }
 }
+
+
 

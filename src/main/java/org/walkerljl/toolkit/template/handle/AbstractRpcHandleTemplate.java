@@ -2,32 +2,29 @@ package org.walkerljl.toolkit.template.handle;
 
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.standard.Message;
-import org.walkerljl.toolkit.standard.exception.AppException;
-import org.walkerljl.toolkit.standard.exception.AppServiceException;
-import org.walkerljl.toolkit.standard.exception.ErrorCode;
+import org.walkerljl.toolkit.standard.exception.AppRpcException;
 
 /**
- * 抽象的业务处理模板
+ * 抽象的Rpc处理模板
  *
  * @author lijunlin
  */
-public abstract class AbstractServiceHandleTemplate<Param, Result> {
+public abstract class AbstractRpcHandleTemplate<Param, Result> {
 
     /**
      * 本地日志打印对象
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractServiceHandleTemplate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRpcHandleTemplate.class);
 
     /**
      * 处理业务
      *
      * @param param 请求参数
-     * @param serviceHandler 业务处理器
+     * @param rpcHandler rpc处理器
      * @return
      */
-    public Message<Result> handle(Param param, ServiceHandler<Param, Result> serviceHandler) {
-        return handle(null, param, serviceHandler);
+    public Result handle(Param param, RpcHandler<Param, Result> rpcHandler) {
+        return handle(null, param, rpcHandler);
     }
 
     /**
@@ -35,49 +32,31 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      *
      * @param messagePrefix 消息前缀
      * @param param 请求参数
-     * @param serviceHandler 业务处理器
+     * @param rpcHandler 业务处理器
      * @return
      */
-    public Message<Result> handle(String messagePrefix, Param param, ServiceHandler<Param, Result> serviceHandler) {
+    public Result handle(String messagePrefix, Param param, RpcHandler<Param, Result> rpcHandler) {
 
-        Message<Result> message = null;
+        Result result = null;
         try {
-            //参数校验
-            boolean isPass = serviceHandler.checkParams(param);
-            if (!isPass) {
-                throw new AppServiceException(ServiceErrorCode.INVALID_PARAM);
-            }
-
             //业务执行
-            Result result = serviceHandler.handle(param);
-
-            //构建Success消息
-            message = Message.success(result);
+            result = rpcHandler.handle(param);
 
             //日志跟踪打印
             Logger logger = getLogger();
             if (logger != null) {
                 if (logger.isInfoEnabled()) {
-                    logger.info(wrapTraceMessage(messagePrefix, param, message));
+                    logger.info(wrapTraceMessage(messagePrefix, param, result));
                 }
             }
         } catch (Throwable e) {
-            if (!canRethrowException()) {
-                //构建Failure消息
-                ErrorCode errorCode = (e instanceof AppServiceException) ? ((AppServiceException) e).getCode() : null;
-                if (errorCode != null) {
-                    message = Message.failure(errorCode.getCode(), e.getMessage());
-                } else {
-                    message = Message.failure(ServiceErrorCode.UNKOWN.getCode(), ServiceErrorCode.UNKOWN.getDescription());
-                }
-            }
 
             //异常处理
             try {
                 Logger logger = getLogger();
                 if (logger != null) {
-                    String messageString = wrapTraceMessage(messagePrefix, param, message);
-                    if (e instanceof AppException) {
+                    String messageString = wrapTraceMessage(messagePrefix, param, result);
+                    if (e instanceof AppRpcException) {
                         logger.warn(messageString);
                     } else {
                         logger.error(messageString, e);
@@ -97,7 +76,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
                 }
             }
         }
-        return message;
+        return result;
     }
 
     /**
@@ -119,7 +98,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      * @return
      */
     protected boolean canRethrowException() {
-        return false;
+        return true;
     }
 
     /**
@@ -129,7 +108,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      * @param runtimeException 运行时异常
      */
     protected void rethrowException(String errMsg, RuntimeException runtimeException) {
-        throw new AppServiceException(errMsg, runtimeException);
+        throw new AppRpcException(errMsg, runtimeException);
     }
 
     /**

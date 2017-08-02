@@ -2,16 +2,15 @@ package org.walkerljl.toolkit.template.handle;
 
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.standard.exception.AppRpcException;
 
 /**
- * RPC业务处理模板
- *
+ * Rpc处理模板
+ * 
  * @author lijunlin
  */
-public class RpcHandleTemplate<Param, Result> extends AbstractServiceHandleTemplate<Param, Result> {
+public class RpcHandleTemplate<Param, Result> extends AbstractRpcHandleTemplate<Param, Result> {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(RpcHandleTemplate.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcHandleTemplate.class);
 
     /**
      * 私有构造函数
@@ -24,7 +23,7 @@ public class RpcHandleTemplate<Param, Result> extends AbstractServiceHandleTempl
      * @return
      */
     public static RpcHandleTemplate getInstance() {
-        return RpcHandleTemplateHolder.instance;
+        return RpcHandleTemplate.RpcHandleTemplateHolder.instance;
     }
 
     /**
@@ -32,11 +31,6 @@ public class RpcHandleTemplate<Param, Result> extends AbstractServiceHandleTempl
      */
     private static class RpcHandleTemplateHolder {
         private static RpcHandleTemplate instance = new RpcHandleTemplate();
-    }
-
-    @Override
-    protected void rethrowException(String errMsg, RuntimeException runtimeException) {
-        throw new AppRpcException(errMsg, runtimeException);
     }
 
     @Override
