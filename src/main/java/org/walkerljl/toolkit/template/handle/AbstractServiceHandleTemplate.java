@@ -1,5 +1,7 @@
 package org.walkerljl.toolkit.template.handle;
 
+import com.alibaba.fastjson.JSON;
+
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
 import org.walkerljl.toolkit.standard.Message;
@@ -110,7 +112,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      */
     protected String wrapTraceMessage(String messagePrefix, Object request, Object response) {
         return String.format("%sResponse->%s,Request->%s.", (messagePrefix == null ? "" : (messagePrefix + ":")),
-                response, request);
+                JSON.toJSONString(response), JSON.toJSONString(request));
     }
 
     /**

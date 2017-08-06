@@ -4,9 +4,9 @@ package org.walkerljl.toolkit.template.handle;
 import org.walkerljl.toolkit.standard.exception.ErrorCode;
 
 /**
+ * ServiceErrorCode
  *
- * @author junlin.ljl
- * @version $Id: ServiceErrorCode.java, v 0.1 2017年07月18日 下午1:51 junlin.ljl Exp $
+ * @author lijunlin
  */
 public enum ServiceErrorCode implements ErrorCode {
 
