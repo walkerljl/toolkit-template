@@ -5,9 +5,7 @@ import org.testng.annotations.Test;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
 
 /**
- *
- * @author junlin.ljl
- * @version $Id: ServiceHandleTemplateTest.java, v 0.1 2017年07月12日 下午4:37 junlin.ljl Exp $
+ * @author lijunlin
  */
 public class ServiceHandleTemplateTest {
 

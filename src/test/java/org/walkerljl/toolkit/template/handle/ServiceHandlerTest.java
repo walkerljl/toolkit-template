@@ -3,9 +3,7 @@ package org.walkerljl.toolkit.template.handle;
 import org.testng.annotations.Test;
 
 /**
- *
- * @author junlin.ljl
- * @version $Id: ServiceHandlerTest.java, v 0.1 2017年07月16日 下午4:40 junlin.ljl Exp $
+ * @author lijunlin
  */
 public class ServiceHandlerTest {
 

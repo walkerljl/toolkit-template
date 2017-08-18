@@ -4,14 +4,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.standard.Message;
+import org.walkerljl.toolkit.standard.Result;
 import org.walkerljl.toolkit.standard.exception.AppException;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
 
 /**
- *
- * @author junlin.ljl
- * @version $Id: AbstractServiceHandleTemplateTest.java, v 0.1 2017年07月16日 下午4:41 junlin.ljl Exp $
+ * @author lijunlin
  */
 public class AbstractServiceHandleTemplateTest {
 
@@ -41,10 +39,10 @@ public class AbstractServiceHandleTemplateTest {
             }
         };
 
-        Message<Integer> expectedMessage = null;
-        expectedMessage = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-        Assert.assertTrue(expectedMessage.isFailure());
-        Assert.assertEquals(expectedMessage.getBody(), checkParamFailedErrorMsg);
+        Result<Integer> expectedResult = null;
+        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
+        Assert.assertTrue(expectedResult.isFailure());
+        Assert.assertEquals(expectedResult.getMessage(), checkParamFailedErrorMsg);
 
         serviceHandler = new ServiceHandler<String, Integer>() {
             @Override
@@ -58,9 +56,9 @@ public class AbstractServiceHandleTemplateTest {
             }
         };
 
-        expectedMessage = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-        Assert.assertTrue(expectedMessage.isSuccess());
-        Assert.assertEquals(expectedMessage.getData(), new Integer(1));
+        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
+        Assert.assertTrue(expectedResult.isSuccess());
+        Assert.assertEquals(expectedResult.getData(), new Integer(1));
     }
 
     @Test
@@ -87,10 +85,10 @@ public class AbstractServiceHandleTemplateTest {
             }
         };
 
-        Message<Integer> expectedMessage = null;
-        expectedMessage = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-        Assert.assertTrue(expectedMessage.isFailure());
-        Assert.assertEquals(expectedMessage.getBody(), checkParamFailedErrorMsg);
+        Result<Integer> expectedResult = null;
+        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
+        Assert.assertTrue(expectedResult.isFailure());
+        Assert.assertEquals(expectedResult.getMessage(), checkParamFailedErrorMsg);
 
         serviceHandler = new ServiceHandler<String, Integer>() {
             @Override
@@ -104,9 +102,9 @@ public class AbstractServiceHandleTemplateTest {
             }
         };
 
-        expectedMessage = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-        Assert.assertTrue(expectedMessage.isSuccess());
-        Assert.assertEquals(expectedMessage.getData(), new Integer(1));
+        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
+        Assert.assertTrue(expectedResult.isSuccess());
+        Assert.assertEquals(expectedResult.getData(), new Integer(1));
     }
 
     @Test
@@ -138,18 +136,18 @@ public class AbstractServiceHandleTemplateTest {
             }
         };
 
-        boolean expectedResult = false;
-        Message<Integer> expectedMessage = null;
+        boolean expectedIsSuccess = false;
+        Result<Integer> expectedResult = null;
         try {
-            expectedMessage = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
+            expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
         } catch (AppException e) {
             if (checkParamFailedErrorMsg.equals(e.getMessage())) {
-                expectedResult = true;
+                expectedIsSuccess = true;
             }
         }
-        Assert.assertTrue(expectedResult);
-        expectedResult = false;
-        Assert.assertNull(expectedMessage);
+        Assert.assertTrue(expectedIsSuccess);
+        expectedIsSuccess = false;
+        Assert.assertNull(expectedResult);
 
         serviceHandler = new ServiceHandler<String, Integer>() {
             @Override
@@ -162,10 +160,10 @@ public class AbstractServiceHandleTemplateTest {
                 return 1;
             }
         };
-        expectedMessage = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-        Assert.assertTrue(expectedMessage.isSuccess());
-        Assert.assertEquals(expectedMessage.getData(), new Integer(1));
-        expectedMessage = null;
+        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
+        Assert.assertTrue(expectedResult.isSuccess());
+        Assert.assertEquals(expectedResult.getData(), new Integer(1));
+        expectedResult = null;
 
         serviceHandler = new ServiceHandler<String, Integer>() {
             @Override
@@ -179,21 +177,21 @@ public class AbstractServiceHandleTemplateTest {
             }
         };
         try {
-            expectedMessage = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
+            expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
         } catch (AppException e) {
             if ("xx".equals(e.getMessage())) {
-                expectedResult = true;
+                expectedIsSuccess = true;
             }
         }
-        Assert.assertTrue(expectedResult);
-        Assert.assertNull(expectedMessage);
+        Assert.assertTrue(expectedIsSuccess);
+        Assert.assertNull(expectedResult);
     }
 
     @Test
     public void testCaseForErrorCode() {
 
-        String param = "hello";
-        Object result = "world";
+        String handlerParam = "hello";
+        Object handlerResult = "world";
         AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
 
             @Override
@@ -210,13 +208,13 @@ public class AbstractServiceHandleTemplateTest {
 
             @Override
             public Object handle(String s) {
-                return result;
+                return handlerResult;
             }
         };
         String customizedErrorMsg = "XX参数未无效";
-        Message<Object> message = serviceHandleTemplate.handle(param, serviceHandler);
-        Assert.assertEquals(message.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
-        Assert.assertEquals(message.getBody(), ServiceErrorCode.INVALID_PARAM.getDescription());
+        Result<Object> result = serviceHandleTemplate.handle(handlerParam, serviceHandler);
+        Assert.assertEquals(result.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(result.getMessage(), ServiceErrorCode.INVALID_PARAM.getDescription());
 
         serviceHandler = new ServiceHandler<String, Object>() {
 
@@ -227,12 +225,12 @@ public class AbstractServiceHandleTemplateTest {
 
             @Override
             public Object handle(String s) {
-                return result;
+                return handlerResult;
             }
         };
-        message = serviceHandleTemplate.handle(param, serviceHandler);
-        Assert.assertEquals(message.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
-        Assert.assertEquals(message.getBody(), customizedErrorMsg);
+        result = serviceHandleTemplate.handle(handlerParam, serviceHandler);
+        Assert.assertEquals(result.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(result.getMessage(), customizedErrorMsg);
 
         serviceHandler = new ServiceHandler<String, Object>() {
 
@@ -243,12 +241,12 @@ public class AbstractServiceHandleTemplateTest {
 
             @Override
             public Object handle(String s) {
-                return result;
+                return handlerResult;
             }
         };
-        message = serviceHandleTemplate.handle(param, serviceHandler);
-        Assert.assertEquals(message.getCode(), ServiceErrorCode.UNKOWN.getCode());
-        Assert.assertEquals(message.getBody(), ServiceErrorCode.UNKOWN.getDescription());
+        result = serviceHandleTemplate.handle(handlerParam, serviceHandler);
+        Assert.assertEquals(result.getCode(), ServiceErrorCode.UNKOWN.getCode());
+        Assert.assertEquals(result.getMessage(), ServiceErrorCode.UNKOWN.getDescription());
     }
 }
 

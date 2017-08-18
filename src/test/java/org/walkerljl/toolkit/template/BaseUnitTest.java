@@ -6,11 +6,7 @@ import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
 
 /**
- *
- * 单元测试基类
- *
- * @author junlin.ljl
- * @version $Id: BaseUnitTest.java, v 0.1 2017年06月01日 上午9:47 junlin.ljl Exp $
+ * @author lijunlin
  */
 public class BaseUnitTest {
 

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.standard.Message;
 import org.walkerljl.toolkit.standard.exception.AppException;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
 import org.walkerljl.toolkit.standard.exception.ErrorCode;
@@ -28,7 +27,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      * @param serviceHandler 业务处理器
      * @return
      */
-    public Message<Result> handle(Param param, ServiceHandler<Param, Result> serviceHandler) {
+    public org.walkerljl.toolkit.standard.Result<Result> handle(Param param, ServiceHandler<Param, Result> serviceHandler) {
         return handle(null, param, serviceHandler);
     }
 
@@ -40,9 +39,9 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      * @param serviceHandler 业务处理器
      * @return
      */
-    public Message<Result> handle(String messagePrefix, Param param, ServiceHandler<Param, Result> serviceHandler) {
+    public org.walkerljl.toolkit.standard.Result<Result> handle(String messagePrefix, Param param, ServiceHandler<Param, Result> serviceHandler) {
 
-        Message<Result> message = null;
+        org.walkerljl.toolkit.standard.Result<Result> result = null;
         try {
             //参数校验
             boolean isPass = serviceHandler.checkParams(param);
@@ -51,16 +50,16 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
             }
 
             //业务执行
-            Result result = serviceHandler.handle(param);
+            Result handlerResult = serviceHandler.handle(param);
 
             //构建Success消息
-            message = Message.success(result);
+            result = org.walkerljl.toolkit.standard.Result.success(handlerResult);
 
             //日志跟踪打印
             Logger logger = getLogger();
             if (logger != null) {
                 if (logger.isInfoEnabled()) {
-                    logger.info(wrapTraceMessage(messagePrefix, param, message));
+                    logger.info(wrapTraceMessage(messagePrefix, param, result));
                 }
             }
         } catch (Throwable e) {
@@ -68,9 +67,10 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
                 //构建Failure消息
                 ErrorCode errorCode = (e instanceof AppServiceException) ? ((AppServiceException) e).getCode() : null;
                 if (errorCode != null) {
-                    message = Message.failure(errorCode.getCode(), e.getMessage());
+                    result = org.walkerljl.toolkit.standard.Result.failure(errorCode.getCode(), e.getMessage());
                 } else {
-                    message = Message.failure(ServiceErrorCode.UNKOWN.getCode(), ServiceErrorCode.UNKOWN.getDescription());
+                    result = org.walkerljl.toolkit.standard.Result.failure(ServiceErrorCode.UNKOWN.getCode(), ServiceErrorCode.UNKOWN.getDescription());
+                    result.setRemark(e.getMessage());
                 }
             }
 
@@ -78,7 +78,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
             try {
                 Logger logger = getLogger();
                 if (logger != null) {
-                    String messageString = wrapTraceMessage(messagePrefix, param, message);
+                    String messageString = wrapTraceMessage(messagePrefix, param, result);
                     if (e instanceof AppException) {
                         logger.warn(messageString);
                     } else {
@@ -99,7 +99,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
                 }
             }
         }
-        return message;
+        return result;
     }
 
     /**
