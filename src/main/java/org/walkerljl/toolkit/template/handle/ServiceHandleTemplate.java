@@ -9,7 +9,7 @@ import org.walkerljl.toolkit.standard.exception.AppServiceException;
  * 
  * @author lijunlin
  */
-public class ServiceHandleTemplate<Param, Result> extends AbstractServiceHandleTemplate<Param, Result> {
+public class ServiceHandleTemplate extends AbstractServiceHandleTemplate {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceHandleTemplate.class);
 
