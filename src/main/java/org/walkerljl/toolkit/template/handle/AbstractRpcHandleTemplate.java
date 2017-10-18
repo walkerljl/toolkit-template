@@ -9,7 +9,7 @@ import org.walkerljl.toolkit.standard.exception.AppRpcException;
  *
  * @author lijunlin
  */
-public abstract class AbstractRpcHandleTemplate<Param, Result> {
+public abstract class AbstractRpcHandleTemplate {
 
     /**
      * 本地日志打印对象
@@ -23,7 +23,7 @@ public abstract class AbstractRpcHandleTemplate<Param, Result> {
      * @param rpcHandler rpc处理器
      * @return
      */
-    public Result handle(Param param, RpcHandler<Param, Result> rpcHandler) {
+    public <Param, Result> Result handle(Param param, RpcHandler<Param, Result> rpcHandler) {
         return handle(null, param, rpcHandler);
     }
 
@@ -35,7 +35,7 @@ public abstract class AbstractRpcHandleTemplate<Param, Result> {
      * @param rpcHandler 业务处理器
      * @return
      */
-    public Result handle(String messagePrefix, Param param, RpcHandler<Param, Result> rpcHandler) {
+    public <Param, Result> Result handle(String messagePrefix, Param param, RpcHandler<Param, Result> rpcHandler) {
 
         Result result = null;
         try {

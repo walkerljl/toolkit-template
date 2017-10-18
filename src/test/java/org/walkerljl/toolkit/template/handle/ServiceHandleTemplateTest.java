@@ -12,7 +12,7 @@ public class ServiceHandleTemplateTest {
     @Test
     public void test() {
 
-        ServiceHandleTemplate<String, Integer> serviceHandleTemplate = ServiceHandleTemplate.getInstance();
+        ServiceHandleTemplate serviceHandleTemplate = ServiceHandleTemplate.getInstance();
         Assert.assertTrue(serviceHandleTemplate instanceof ServiceHandleTemplate);
 
         String actualErrorMsg = "errorMsg";

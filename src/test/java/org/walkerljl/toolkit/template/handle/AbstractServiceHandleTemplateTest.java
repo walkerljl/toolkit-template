@@ -26,7 +26,7 @@ public class AbstractServiceHandleTemplateTest {
         };
 
         String actualMessagePrefix = null;
-        Integer param = null;
+        String param = null;
         ServiceHandler<String, Integer> serviceHandler = new ServiceHandler<String, Integer>() {
             @Override
             public boolean checkParams(String s) {
@@ -72,7 +72,7 @@ public class AbstractServiceHandleTemplateTest {
         };
 
         String actualMessagePrefix = null;
-        Integer param = null;
+        String param = null;
         ServiceHandler<String, Integer> serviceHandler = new ServiceHandler<String, Integer>() {
             @Override
             public boolean checkParams(String s) {
@@ -123,7 +123,7 @@ public class AbstractServiceHandleTemplateTest {
         };
 
         String actualMessagePrefix = null;
-        Integer param = null;
+        String param = null;
         ServiceHandler<String, Integer> serviceHandler = new ServiceHandler<String, Integer>() {
             @Override
             public boolean checkParams(String s) {

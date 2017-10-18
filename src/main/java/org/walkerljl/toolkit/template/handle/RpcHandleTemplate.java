@@ -8,7 +8,7 @@ import org.walkerljl.toolkit.logging.LoggerFactory;
  * 
  * @author lijunlin
  */
-public class RpcHandleTemplate<Param, Result> extends AbstractRpcHandleTemplate<Param, Result> {
+public class RpcHandleTemplate extends AbstractRpcHandleTemplate {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RpcHandleTemplate.class);
 

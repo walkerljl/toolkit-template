@@ -13,7 +13,7 @@ import org.walkerljl.toolkit.standard.exception.ErrorCode;
  *
  * @author lijunlin
  */
-public abstract class AbstractServiceHandleTemplate<Param, Result> {
+public abstract class AbstractServiceHandleTemplate {
 
     /**
      * 本地日志打印对象
@@ -27,7 +27,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      * @param serviceHandler 业务处理器
      * @return
      */
-    public org.walkerljl.toolkit.standard.Result<Result> handle(Param param, ServiceHandler<Param, Result> serviceHandler) {
+    public <Param, Result> org.walkerljl.toolkit.standard.Result<Result> handle(Param param, ServiceHandler<Param, Result> serviceHandler) {
         return handle(null, param, serviceHandler);
     }
 
@@ -39,7 +39,7 @@ public abstract class AbstractServiceHandleTemplate<Param, Result> {
      * @param serviceHandler 业务处理器
      * @return
      */
-    public org.walkerljl.toolkit.standard.Result<Result> handle(String messagePrefix, Param param, ServiceHandler<Param, Result> serviceHandler) {
+    public <Param, Result> org.walkerljl.toolkit.standard.Result<Result> handle(String messagePrefix, Param param, ServiceHandler<Param, Result> serviceHandler) {
 
         org.walkerljl.toolkit.standard.Result<Result> result = null;
         try {
