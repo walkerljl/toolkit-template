@@ -1,4 +1,4 @@
-package org.walkerljl.toolkit.template.handle;
+package org.walkerljl.toolkit.template.handle.rpc;
 
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;

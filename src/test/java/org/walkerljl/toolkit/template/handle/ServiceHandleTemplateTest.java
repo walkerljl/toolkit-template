@@ -3,6 +3,7 @@ package org.walkerljl.toolkit.template.handle;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
+import org.walkerljl.toolkit.template.handle.service.ServiceHandleTemplate;
 
 /**
  * @author lijunlin

@@ -1,4 +1,4 @@
-package org.walkerljl.toolkit.template.handle;
+package org.walkerljl.toolkit.template.handle.rpc;
 
 /**
  * Rpc处理器

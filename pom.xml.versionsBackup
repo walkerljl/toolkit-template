@@ -6,10 +6,10 @@
 
     <groupId>org.walkerljl</groupId>
     <artifactId>toolkit-template</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <org.walkerljl.toolkit.standard.version>1.0.0-SNAPSHOT</org.walkerljl.toolkit.standard.version>
+        <toolkit-standard.version>1.0-SNAPSHOT</toolkit-standard.version>
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>org.walkerljl</groupId>
             <artifactId>toolkit-standard</artifactId>
-            <version>${org.walkerljl.toolkit.standard.version}</version>
+            <version>${toolkit-standard.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
