@@ -1,4 +1,4 @@
-package org.walkerljl.toolkit.template.handle;
+package org.walkerljl.toolkit.template.handle.service;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -7,9 +7,6 @@ import org.walkerljl.toolkit.logging.LoggerFactory;
 import org.walkerljl.toolkit.standard.Result;
 import org.walkerljl.toolkit.standard.exception.AppException;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
-import org.walkerljl.toolkit.template.handle.service.AbstractServiceHandleTemplate;
-import org.walkerljl.toolkit.template.handle.service.ServiceErrorCode;
-import org.walkerljl.toolkit.template.handle.service.ServiceHandler;
 
 /**
  * @author lijunlin
@@ -250,6 +247,44 @@ public class AbstractServiceHandleTemplateTest {
         result = serviceHandleTemplate.handle(handlerParam, serviceHandler);
         Assert.assertEquals(result.getCode(), ServiceErrorCode.UNKOWN.getCode());
         Assert.assertEquals(result.getMessage(), ServiceErrorCode.UNKOWN.getDescription());
+    }
+
+    @Test
+    public void testCaseForPrintErrorLog() {
+        String handlerParam = "hello";
+        AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
+            @Override
+            public Logger getLogger() {
+                return LoggerFactory.getLogger(AbstractServiceHandleTemplateTest.class);
+            }
+        };
+        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                throw new AppException();
+            }
+
+            @Override
+            public Object handle(String s) {
+                return null;
+            }
+        };
+
+        serviceHandleTemplate.handle(handlerParam, serviceHandler);
+
+        serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return false;
+            }
+
+            @Override
+            public Object handle(String s) {
+                return null;
+            }
+        };
+
+        serviceHandleTemplate.handle(handlerParam, serviceHandler);
     }
 }
 

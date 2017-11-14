@@ -1,4 +1,4 @@
-package org.walkerljl.toolkit.template.handle;
+package org.walkerljl.toolkit.template.handle.service;
 
 import org.testng.annotations.Test;
 import org.walkerljl.toolkit.template.handle.service.ServiceHandler;

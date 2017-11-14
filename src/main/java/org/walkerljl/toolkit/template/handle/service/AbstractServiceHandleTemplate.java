@@ -46,7 +46,7 @@ public abstract class AbstractServiceHandleTemplate {
             //参数校验
             boolean isPass = serviceHandler.checkParams(param);
             if (!isPass) {
-                throw new AppServiceException(ServiceErrorCode.INVALID_PARAM);
+                rethrowException("参数校验失败", ServiceErrorCode.INVALID_PARAM, null);
             }
 
             //业务执行
@@ -79,7 +79,7 @@ public abstract class AbstractServiceHandleTemplate {
                 Logger logger = getLogger();
                 if (logger != null) {
                     String messageString = wrapTraceMessage(messagePrefix, param, result);
-                    if (e instanceof AppException) {
+                    if (e instanceof AppException && ((AppException)e).getCode() instanceof ErrorCode) {
                         logger.warn(messageString);
                     } else {
                         logger.error(messageString, e);
@@ -93,7 +93,7 @@ public abstract class AbstractServiceHandleTemplate {
             if (canRethrowException()) {
                 //rethrow the exception
                 if (e instanceof RuntimeException) {
-                    rethrowException(e.getMessage(), ((RuntimeException) e));
+                    rethrowException(e.getMessage(), null, ((RuntimeException) e));
                 } else {
                     throw new Error(e.getMessage(), e);
                 }
@@ -130,8 +130,8 @@ public abstract class AbstractServiceHandleTemplate {
      * @param errMsg 错误消息
      * @param runtimeException 运行时异常
      */
-    protected void rethrowException(String errMsg, RuntimeException runtimeException) {
-        throw new AppServiceException(errMsg, runtimeException);
+    protected void rethrowException(String errMsg, ErrorCode errorCode, RuntimeException runtimeException) {
+        throw new AppServiceException(errorCode, errMsg, runtimeException);
     }
 
     /**

@@ -3,6 +3,7 @@ package org.walkerljl.toolkit.template.handle.rpc;
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
 import org.walkerljl.toolkit.standard.exception.AppRpcException;
+import org.walkerljl.toolkit.standard.exception.ErrorCode;
 
 /**
  * 抽象的Rpc处理模板
@@ -56,7 +57,7 @@ public abstract class AbstractRpcHandleTemplate {
                 Logger logger = getLogger();
                 if (logger != null) {
                     String messageString = wrapTraceMessage(messagePrefix, param, result);
-                    if (e instanceof AppRpcException) {
+                    if (e instanceof AppRpcException && ((AppRpcException)e).getCode() instanceof ErrorCode) {
                         logger.warn(messageString);
                     } else {
                         logger.error(messageString, e);
