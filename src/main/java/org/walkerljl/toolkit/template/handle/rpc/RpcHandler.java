@@ -1,11 +1,13 @@
 package org.walkerljl.toolkit.template.handle.rpc;
 
+import org.walkerljl.toolkit.template.log.InvocationInfo;
+
 /**
  * Rpc处理器
  *
  * @author lijunlin
  */
-public interface RpcHandler<Param, Result> {
+public interface RpcHandler<PARAM, RESULT> {
 
     /**
      * 业务处理
@@ -13,5 +15,5 @@ public interface RpcHandler<Param, Result> {
      * @param param 参数
      * @return
      */
-    Result handle(Param param);
+    InvocationInfo<RESULT> handle(PARAM param);
 }

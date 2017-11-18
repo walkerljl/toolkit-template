@@ -5,7 +5,7 @@ package org.walkerljl.toolkit.template.handle.service;
  *
  * @author lijunlin
  */
-public interface ServiceHandler<Param, Result> {
+public interface ServiceHandler<PARAM, RESULT> {
 
     /**
      * 参数校验
@@ -13,7 +13,7 @@ public interface ServiceHandler<Param, Result> {
      * @param param 参数
      * @return
      */
-    boolean checkParams(Param param);
+    boolean checkParams(PARAM param);
 
     /**
      * 业务处理
@@ -21,5 +21,5 @@ public interface ServiceHandler<Param, Result> {
      * @param param 参数
      * @return
      */
-    Result handle(Param param);
+    RESULT handle(PARAM param);
 }

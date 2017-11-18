@@ -27,7 +27,7 @@ public abstract class AbstractServiceHandleTemplate {
      * @param serviceHandler 业务处理器
      * @return
      */
-    public <Param, Result> org.walkerljl.toolkit.standard.Result<Result> handle(Param param, ServiceHandler<Param, Result> serviceHandler) {
+    public <PARAM, RESULT> org.walkerljl.toolkit.standard.Result<RESULT> handle(PARAM param, ServiceHandler<PARAM, RESULT> serviceHandler) {
         return handle(null, param, serviceHandler);
     }
 
@@ -39,18 +39,18 @@ public abstract class AbstractServiceHandleTemplate {
      * @param serviceHandler 业务处理器
      * @return
      */
-    public <Param, Result> org.walkerljl.toolkit.standard.Result<Result> handle(String messagePrefix, Param param, ServiceHandler<Param, Result> serviceHandler) {
+    public <PARAM, RESULT> org.walkerljl.toolkit.standard.Result<RESULT> handle(String messagePrefix, PARAM param, ServiceHandler<PARAM, RESULT> serviceHandler) {
 
-        org.walkerljl.toolkit.standard.Result<Result> result = null;
+        org.walkerljl.toolkit.standard.Result<RESULT> result = null;
         try {
             //参数校验
             boolean isPass = serviceHandler.checkParams(param);
             if (!isPass) {
-                rethrowException("参数校验失败", ServiceErrorCode.INVALID_PARAM, null);
+                rethrowException(ServiceErrorCode.INVALID_PARAM, null);
             }
 
             //业务执行
-            Result handlerResult = serviceHandler.handle(param);
+            RESULT handlerResult = serviceHandler.handle(param);
 
             //构建Success消息
             result = org.walkerljl.toolkit.standard.Result.success(handlerResult);
@@ -93,7 +93,7 @@ public abstract class AbstractServiceHandleTemplate {
             if (canRethrowException()) {
                 //rethrow the exception
                 if (e instanceof RuntimeException) {
-                    rethrowException(e.getMessage(), null, ((RuntimeException) e));
+                    rethrowException(null, ((RuntimeException) e));
                 } else {
                     throw new Error(e.getMessage(), e);
                 }
@@ -127,11 +127,14 @@ public abstract class AbstractServiceHandleTemplate {
     /**
      * 重新抛出异常
      *
-     * @param errMsg 错误消息
-     * @param runtimeException 运行时异常
+     * @param exception 异常
      */
-    protected void rethrowException(String errMsg, ErrorCode errorCode, RuntimeException runtimeException) {
-        throw new AppServiceException(errorCode, errMsg, runtimeException);
+    protected void rethrowException(ErrorCode errorCode, RuntimeException exception) {
+        if (errorCode == null) {
+            throw new AppServiceException(exception.getMessage(), exception);
+        } else {
+            throw new AppServiceException(errorCode, exception);
+        }
     }
 
     /**

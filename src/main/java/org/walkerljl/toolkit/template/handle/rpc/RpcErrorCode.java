@@ -1,24 +1,19 @@
 
-package org.walkerljl.toolkit.template.handle.service;
+package org.walkerljl.toolkit.template.handle.rpc;
 
 import org.walkerljl.toolkit.standard.exception.ErrorCode;
 
 /**
- * ServiceErrorCode
+ * RpcErrorCode
  *
  * @author lijunlin
  */
-public enum ServiceErrorCode implements ErrorCode {
+public enum RpcErrorCode implements ErrorCode {
 
     /**
      * 未知异常
      */
-    UNKOWN("20000", "未知异常"),
-
-    /**
-     * 无效的参数
-     */
-    INVALID_PARAM("20002", "无效的参数"),
+    UNKOWN("10000", "未知异常"),
     ;
 
     /**
@@ -27,7 +22,7 @@ public enum ServiceErrorCode implements ErrorCode {
      * @param code 编码
      * @param description 描述
      */
-    ServiceErrorCode(String code, String description) {
+    RpcErrorCode(String code, String description) {
         this.code = code;
         this.description = description;
     }

@@ -41,7 +41,7 @@ public class AbstractServiceHandleTemplateTest {
 
         Result<Integer> expectedResult = null;
         expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-        Assert.assertTrue(expectedResult.isFailure());
+        Assert.assertTrue(!expectedResult.isSuccess());
         Assert.assertEquals(expectedResult.getMessage(), checkParamFailedErrorMsg);
 
         serviceHandler = new ServiceHandler<String, Integer>() {
@@ -87,7 +87,7 @@ public class AbstractServiceHandleTemplateTest {
 
         Result<Integer> expectedResult = null;
         expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-        Assert.assertTrue(expectedResult.isFailure());
+        Assert.assertTrue(!expectedResult.isSuccess());
         Assert.assertEquals(expectedResult.getMessage(), checkParamFailedErrorMsg);
 
         serviceHandler = new ServiceHandler<String, Integer>() {
@@ -141,7 +141,8 @@ public class AbstractServiceHandleTemplateTest {
         try {
             expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
         } catch (AppException e) {
-            if (checkParamFailedErrorMsg.equals(e.getMessage())) {
+            String msg = e.getMessage();
+            if (checkParamFailedErrorMsg.equals(msg)) {
                 expectedIsSuccess = true;
             }
         }

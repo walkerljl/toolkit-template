@@ -2,7 +2,6 @@ package org.walkerljl.toolkit.template.handle.service;
 
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.standard.exception.AppServiceException;
 
 /**
  * 业务处理模板
@@ -32,11 +31,6 @@ public class ServiceHandleTemplate extends AbstractServiceHandleTemplate {
      */
     private static class ServiceHandleTemplateHolder {
         private static ServiceHandleTemplate instance = new ServiceHandleTemplate();
-    }
-
-    @Override
-    protected void rethrowException(String errMsg, RuntimeException runtimeException) {
-        throw new AppServiceException(errMsg, runtimeException);
     }
 
     @Override

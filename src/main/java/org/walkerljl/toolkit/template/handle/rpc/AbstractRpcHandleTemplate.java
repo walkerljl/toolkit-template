@@ -1,9 +1,13 @@
 package org.walkerljl.toolkit.template.handle.rpc;
 
+
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
 import org.walkerljl.toolkit.standard.exception.AppRpcException;
-import org.walkerljl.toolkit.standard.exception.ErrorCode;
+import org.walkerljl.toolkit.template.log.InvocationInfo;
+import org.walkerljl.toolkit.template.log.LoggerDetailUtil;
+import org.walkerljl.toolkit.template.log.LoggerDigestUtil;
+import org.walkerljl.toolkit.template.log.LoggerUtil;
 
 /**
  * 抽象的Rpc处理模板
@@ -12,85 +16,52 @@ import org.walkerljl.toolkit.standard.exception.ErrorCode;
  */
 public abstract class AbstractRpcHandleTemplate {
 
-    /**
-     * 本地日志打印对象
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRpcHandleTemplate.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     /**
      * 处理业务
      *
      * @param param 请求参数
-     * @param rpcHandler rpc处理器
+     * @param handler 处理器
      * @return
      */
-    public <Param, Result> Result handle(Param param, RpcHandler<Param, Result> rpcHandler) {
-        return handle(null, param, rpcHandler);
-    }
-
-    /**
-     * 处理业务
-     *
-     * @param messagePrefix 消息前缀
-     * @param param 请求参数
-     * @param rpcHandler 业务处理器
-     * @return
-     */
-    public <Param, Result> Result handle(String messagePrefix, Param param, RpcHandler<Param, Result> rpcHandler) {
-
-        Result result = null;
+    public <PARAM, RESULT> RESULT handle(PARAM param, RpcHandler<PARAM, RESULT> handler) {
+        InvocationInfo<RESULT> invocationInfo = null;
         try {
             //业务执行
-            result = rpcHandler.handle(param);
-
-            //日志跟踪打印
-            Logger logger = getLogger();
-            if (logger != null) {
-                if (logger.isInfoEnabled()) {
-                    logger.info(wrapTraceMessage(messagePrefix, param, result));
-                }
-            }
+            invocationInfo = handler.handle(param);
         } catch (Throwable e) {
-
-            //异常处理
-            try {
-                Logger logger = getLogger();
-                if (logger != null) {
-                    String messageString = wrapTraceMessage(messagePrefix, param, result);
-                    if (e instanceof AppRpcException && ((AppRpcException)e).getCode() instanceof ErrorCode) {
-                        logger.warn(messageString);
-                    } else {
-                        logger.error(messageString, e);
-                    }
-                }
-            } catch (Throwable inner) {
-                LOGGER.error("Fail to trace exception:" + inner.getMessage(), inner);
-            }
-
             //如需要重新抛出异常则重新抛出异常
             if (canRethrowException()) {
                 //rethrow the exception
                 if (e instanceof RuntimeException) {
-                    rethrowException(e.getMessage(), ((RuntimeException) e));
+                    rethrowException(((RuntimeException) e));
                 } else {
                     throw new Error(e.getMessage(), e);
                 }
             }
+        } finally {
+            try {
+                doLog(invocationInfo);
+            } catch (Throwable e) {
+                LoggerUtil.error(LOGGER, e);
+            }
         }
-        return result;
+
+        if (invocationInfo == null) {
+            rethrowException("invocation info is null.");
+        }
+
+        if (!invocationInfo.isSuccess()) {
+            rethrowException(invocationInfo.getTraceInfo());
+        }
+
+        return invocationInfo.getResult();
     }
 
-    /**
-     * 包装跟踪消息
-     *
-     * @param messagePrefix 消息前缀
-     * @param request       请求参数
-     * @param response      响应对象
-     * @return
-     */
-    protected String wrapTraceMessage(String messagePrefix, Object request, Object response) {
-        return String.format("%sResponse->%s,Request->%s.", (messagePrefix == null ? "" : (messagePrefix + ":")),
-                response, request);
+    private <RESULT> void doLog(InvocationInfo<RESULT> invocationInfo) {
+        LoggerDigestUtil.logDigest(invocationInfo, getDigestLogger());
+        LoggerDetailUtil.logDetail(invocationInfo, getDetailLogger());
     }
 
     /**
@@ -105,17 +76,22 @@ public abstract class AbstractRpcHandleTemplate {
     /**
      * 重新抛出异常
      *
-     * @param errMsg 错误消息
-     * @param runtimeException 运行时异常
+     * @param errorMsg
      */
-    protected void rethrowException(String errMsg, RuntimeException runtimeException) {
-        throw new AppRpcException(errMsg, runtimeException);
+    protected void rethrowException(String errorMsg) {
+        throw new AppRpcException(errorMsg);
     }
 
     /**
-     * 获取日志对象
+     * 重新抛出异常
      *
-     * @return
+     * @param runtimeException 运行时异常
      */
-    public abstract Logger getLogger();
+    protected void rethrowException(RuntimeException runtimeException) {
+        throw new AppRpcException(runtimeException);
+    }
+
+    protected abstract Logger getDigestLogger();
+
+    protected abstract Logger getDetailLogger();
 }
