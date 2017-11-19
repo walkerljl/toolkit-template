@@ -3,10 +3,9 @@ package org.walkerljl.toolkit.template.handle.rpc;
 
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.standard.exception.AppRpcException;
+import org.walkerljl.toolkit.template.handle.AbstractHandleTemplate;
+import org.walkerljl.toolkit.template.handle.Handler;
 import org.walkerljl.toolkit.template.log.InvocationInfo;
-import org.walkerljl.toolkit.template.log.LoggerDetailUtil;
-import org.walkerljl.toolkit.template.log.LoggerDigestUtil;
 import org.walkerljl.toolkit.template.log.LoggerUtil;
 
 /**
@@ -14,7 +13,7 @@ import org.walkerljl.toolkit.template.log.LoggerUtil;
  *
  * @author lijunlin
  */
-public abstract class AbstractRpcHandleTemplate {
+public abstract class AbstractRpcHandleTemplate extends AbstractHandleTemplate {
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -25,21 +24,22 @@ public abstract class AbstractRpcHandleTemplate {
      * @param handler 处理器
      * @return
      */
-    public <PARAM, RESULT> RESULT handle(PARAM param, RpcHandler<PARAM, RESULT> handler) {
+    public <PARAM, RESULT> RESULT handle(PARAM param, Handler<PARAM, RESULT> handler) {
         InvocationInfo<RESULT> invocationInfo = null;
         try {
-            //业务执行
+            // 参数校验
+            invocationInfo = handler.checkParams(param);
+            assertInvocationInfo(invocationInfo);
+
+            // 业务执行
             invocationInfo = handler.handle(param);
+            assertInvocationInfo(invocationInfo);
         } catch (Throwable e) {
-            //如需要重新抛出异常则重新抛出异常
-            if (canRethrowException()) {
-                //rethrow the exception
-                if (e instanceof RuntimeException) {
-                    rethrowException(((RuntimeException) e));
-                } else {
-                    throw new Error(e.getMessage(), e);
-                }
-            }
+            // 设置异常对象
+            invocationInfo.setThrowable(e);
+            // 尝试重新抛出异常
+            tryRethrowException(e);
+
         } finally {
             try {
                 doLog(invocationInfo);
@@ -48,50 +48,6 @@ public abstract class AbstractRpcHandleTemplate {
             }
         }
 
-        if (invocationInfo == null) {
-            rethrowException("invocation info is null.");
-        }
-
-        if (!invocationInfo.isSuccess()) {
-            rethrowException(invocationInfo.getTraceInfo());
-        }
-
         return invocationInfo.getResult();
     }
-
-    private <RESULT> void doLog(InvocationInfo<RESULT> invocationInfo) {
-        LoggerDigestUtil.logDigest(invocationInfo, getDigestLogger());
-        LoggerDetailUtil.logDetail(invocationInfo, getDetailLogger());
-    }
-
-    /**
-     * 跟踪异常时，是否重新抛出异常
-     *
-     * @return
-     */
-    protected boolean canRethrowException() {
-        return true;
-    }
-
-    /**
-     * 重新抛出异常
-     *
-     * @param errorMsg
-     */
-    protected void rethrowException(String errorMsg) {
-        throw new AppRpcException(errorMsg);
-    }
-
-    /**
-     * 重新抛出异常
-     *
-     * @param runtimeException 运行时异常
-     */
-    protected void rethrowException(RuntimeException runtimeException) {
-        throw new AppRpcException(runtimeException);
-    }
-
-    protected abstract Logger getDigestLogger();
-
-    protected abstract Logger getDetailLogger();
 }

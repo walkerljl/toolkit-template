@@ -19,6 +19,8 @@ public class InvocationInfo<RESULT> implements Serializable {
     private String appName;
     private Class<?> objectClass;
     private String methodName;
+    /** 阶段*/
+    private String phase;
     private Object[] params;
     private RESULT result;
     private Object directResult;

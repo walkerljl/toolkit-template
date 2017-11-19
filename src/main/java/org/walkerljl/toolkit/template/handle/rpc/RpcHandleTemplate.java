@@ -1,5 +1,7 @@
 package org.walkerljl.toolkit.template.handle.rpc;
 
+import org.walkerljl.toolkit.logging.Logger;
+
 /**
  * Rpc处理模板
  * 
@@ -26,5 +28,20 @@ public class RpcHandleTemplate extends AbstractRpcHandleTemplate {
      */
     private static class RpcHandleTemplateHolder {
         private static RpcHandleTemplate instance = new RpcHandleTemplate();
+    }
+
+    @Override
+    protected Logger getDigestLogger() {
+        return null;
+    }
+
+    @Override
+    protected Logger getDetailLogger() {
+        return null;
+    }
+
+    @Override
+    protected Logger getErrorLogger() {
+        return null;
     }
 }

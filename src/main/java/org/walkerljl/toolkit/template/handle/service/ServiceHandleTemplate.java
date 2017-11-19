@@ -26,15 +26,25 @@ public class ServiceHandleTemplate extends AbstractServiceHandleTemplate {
         return ServiceHandleTemplate.ServiceHandleTemplateHolder.instance;
     }
 
+    @Override
+    protected Logger getDigestLogger() {
+        return null;
+    }
+
+    @Override
+    protected Logger getDetailLogger() {
+        return null;
+    }
+
+    @Override
+    protected Logger getErrorLogger() {
+        return null;
+    }
+
     /**
      * 单列容器
      */
     private static class ServiceHandleTemplateHolder {
         private static ServiceHandleTemplate instance = new ServiceHandleTemplate();
-    }
-
-    @Override
-    public Logger getLogger() {
-        return LOGGER;
     }
 }

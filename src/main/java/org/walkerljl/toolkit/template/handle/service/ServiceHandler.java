@@ -1,25 +1,12 @@
 package org.walkerljl.toolkit.template.handle.service;
 
+import org.walkerljl.toolkit.template.handle.Handler;
+
 /**
- * 业务处理器
+ * Service handler
  *
  * @author lijunlin
  */
-public interface ServiceHandler<PARAM, RESULT> {
+public interface ServiceHandler<PARAM, RESULT> extends Handler<PARAM, RESULT> {
 
-    /**
-     * 参数校验
-     *
-     * @param param 参数
-     * @return
-     */
-    boolean checkParams(PARAM param);
-
-    /**
-     * 业务处理
-     *
-     * @param param 参数
-     * @return
-     */
-    RESULT handle(PARAM param);
 }

@@ -4,15 +4,11 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.standard.Result;
 import org.walkerljl.toolkit.template.log.InvocationInfo;
-import org.walkerljl.toolkit.template.log.LogConstants;
 import org.walkerljl.toolkit.template.log.LoggerDetailUtil;
 import org.walkerljl.toolkit.template.log.LoggerDigestUtil;
-import org.walkerljl.toolkit.template.log.LoggerUtil;
 
 /**
- *
  * @author xingxun
  */
 public abstract class AbstractLogInterceptor implements MethodInterceptor {
@@ -30,11 +26,11 @@ public abstract class AbstractLogInterceptor implements MethodInterceptor {
             invocationInfo.setFailure(e);
             throw e;
         } finally {
-           try {
-               doLog(invocationInfo);
-           } catch (Throwable e) {
-               LOGGER.error(e);
-           }
+            try {
+                doLog(invocationInfo);
+            } catch (Throwable e) {
+                LOGGER.error(e);
+            }
         }
         return invocationInfo.getResult();
     }
