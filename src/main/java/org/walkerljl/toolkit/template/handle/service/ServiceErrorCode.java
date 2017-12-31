@@ -1,12 +1,11 @@
-
 package org.walkerljl.toolkit.template.handle.service;
 
-import org.walkerljl.toolkit.standard.exception.ErrorCode;
+import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 
 /**
  * ServiceErrorCode
  *
- * @author lijunlin
+ * @author xingxun
  */
 public enum ServiceErrorCode implements ErrorCode {
 
@@ -18,8 +17,7 @@ public enum ServiceErrorCode implements ErrorCode {
     /**
      * 无效的参数
      */
-    INVALID_PARAM("20002", "无效的参数"),
-    ;
+    INVALID_PARAM("20001", "无效的参数"),;
 
     /**
      * 构造函数

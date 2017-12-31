@@ -5,7 +5,7 @@ import org.walkerljl.toolkit.template.handle.Handler;
 /**
  * Service handler
  *
- * @author lijunlin
+ * @author xingxun
  */
 public interface ServiceHandler<PARAM, RESULT> extends Handler<PARAM, RESULT> {
 

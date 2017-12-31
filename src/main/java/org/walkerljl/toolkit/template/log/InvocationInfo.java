@@ -8,308 +8,429 @@ import java.util.Map;
 /**
  * 调用信息
  *
- * @author lijunlin
+ * @author xingxun
  * @Date 2016/11/25
  */
-public class InvocationInfo<RESULT> implements Serializable {
+public class InvocationInfo<PARAM, RESULT> implements Serializable {
 
+    /** 状态:成功*/
     public static final int STATE_SUCCESS = 1;
+    /** 状态:失败*/
     public static final int STATE_FAILURE = 0;
 
+    /** 应用名称*/
     private String appName;
+    /** 对象Class*/
     private Class<?> objectClass;
+    /** 方法名称*/
     private String methodName;
-    /** 阶段*/
-    private String phase;
-    private Object[] params;
-    private RESULT result;
-    private Object directResult;
+    /** 参数*/
+    private PARAM param;
+    /** 结果数据*/
+    private RESULT resultData;
+    /** 原始结果数据*/
+    private Object directResultData;
+    /** 描述*/
     private String description;
+    /** 状态*/
     private int state = STATE_SUCCESS;
+    /** 异常对象*/
     private Throwable throwable;
+    /** 开始时间*/
     private long beginTime = System.currentTimeMillis();
+    /** 结束时间*/
     private long endTime = 0;
+    /** trace id*/
     private String traceId;
+    /** 参数Map*/
     private Map<String, Object> parametersMap = new HashMap<String, Object>(0);
 
-    public InvocationInfo(Class<?> objectClass, String methodName, Object[] params, Object directResult, RESULT result, boolean isSuccess) {
+    /**
+     * 构造函数
+     *
+     * @param objectClass 调用对象Class
+     * @param methodName 方法名称
+     * @param param 参数
+     * @param directResultData 直接(原始)结果数据
+     * @param resultData 结果数据
+     * @param isSuccess 调用是否成功(true:成功,false:失败)
+     */
+    public InvocationInfo(Class<?> objectClass, String methodName, PARAM param, Object directResultData, RESULT resultData, boolean isSuccess) {
         this.objectClass = objectClass;
         this.methodName = methodName;
-        this.params = params;
-        this.directResult = directResult;
-        this.result = result;
+        this.param = param;
+        this.directResultData = directResultData;
+        this.resultData = resultData;
         this.state = (isSuccess ? STATE_SUCCESS : STATE_FAILURE);
     }
 
-    public InvocationInfo(Class<?> objectClass, String methodName, Object[] params) {
-        this(objectClass, methodName, params, null, null, true);
+    /**
+     * 构造函数
+     *
+     * @param objectClass 调用对象Class
+     * @param methodName 方法名称
+     * @param param 参数
+     * @param isSuccess 调用是否成功(true:成功,false:失败)
+     */
+    public InvocationInfo(Class<?> objectClass, String methodName, PARAM param, boolean isSuccess) {
+        this(objectClass, methodName, param, null, null, isSuccess);
     }
 
-    public void setFailure() {
-        this.setFailure(null);
+    /**
+     * 构造函数
+     *
+     * @param objectClass 调用对象Class
+     * @param methodName 方法名称
+     * @param param 参数
+     */
+    public InvocationInfo(Class<?> objectClass, String methodName, PARAM param) {
+        this(objectClass, methodName, param, null, null, false);
     }
 
-    public void setFailure(Throwable throwable) {
+    /**
+     * 标注失败的调用
+     */
+    public void markFailure() {
+        this.markFailure(null);
+    }
+
+    /**
+     * 标注失败的调用
+     *
+     * @param throwable 异常对象
+     */
+    public void markFailure(Throwable throwable) {
         this.state = STATE_FAILURE;
         this.throwable = throwable;
         this.endTime = System.currentTimeMillis();
     }
 
-    public void setSuccess(RESULT result) {
-        this.state = STATE_SUCCESS;
-        this.endTime = System.currentTimeMillis();
-        this.result = result;
+    /**
+     * 标注成功的调用
+     */
+    public void markSuccess() {
+        markSuccess(null, null);
     }
 
+    /**
+     * 标注成功的调用
+     *
+     * @param resultData 结果数据
+     */
+    public void markSuccess(RESULT resultData) {
+        markSuccess(resultData, resultData);
+    }
+
+    /**
+     * 标注成功的调用
+     *
+     * @param directResultData 直接(原始)结果数据
+     * @param resultData 结果数据
+     */
+    public void markSuccess(Object directResultData, RESULT resultData) {
+        markResult(true, directResultData, resultData);
+    }
+
+    /**
+     * 设置结果
+     *
+     * @param isSuccess  调用是否成功(true:成功,false:失败)
+     * @param directResultData 直接(原始)结果数据
+     * @param resultData 结果数据
+     */
+    public void markResult(boolean isSuccess, Object directResultData, RESULT resultData) {
+        this.state = (isSuccess ? STATE_SUCCESS : STATE_FAILURE);
+        this.endTime = System.currentTimeMillis();
+        this.directResultData = directResultData;
+        this.resultData = resultData;
+    }
+
+    /**
+     * 获取服务名称
+     *
+     * @return 服务名称(类名+方法名称)
+     */
     public String getServiceName() {
         return String.format("%s.%s", objectClass.getSimpleName(), methodName);
     }
 
+    /**
+     * 获取跟踪信息
+     *
+     * @return 跟踪信息(服务名称+参数+返回值)
+     */
     public String getTraceInfo() {
-        return String.format("serviceName=%s,params=%s,result=%s.", getServiceName(), Arrays.toString(params), result);
+        return String.format("serviceName=%s,params=%s,result=%s.", getServiceName(), String.valueOf(param), directResultData);
     }
 
+    /**
+     * 判断调用是否成功
+     *
+     * @return
+     */
     public boolean isSuccess() {
         return STATE_SUCCESS == state;
     }
 
+    /**
+     * 获取调用耗时(单位:毫秒)
+     *
+     * @return
+     */
     public long getCostTime() {
-        return getEndTime() - getBeginTime();
+        return endTime - beginTime;
     }
 
+    /**
+     * 添加参数
+     *
+     * @param key 参数Key
+     * @param value 参数值Value
+     */
     public void addParameter(String key, Object value) {
         parametersMap.put(key, value);
     }
 
     /**
-     * Getter method for property <tt>appName</tt>.
+     * 获取参数值
      *
-     * @return property value of appName
+     * @param key 参数Key
+     */
+    public Object getParameter(String key) {
+        return parametersMap.get(key);
+    }
+
+    //== getter and setter
+
+    /**
+     * 获取应用名称
+     *
+     * @return
      */
     public String getAppName() {
         return appName;
     }
 
     /**
-     * Setter method for property <tt>appName</tt>.
+     * 设置应用名称
      *
-     * @param appName  value to be assigned to property appName
+     * @param appName 应用名称
      */
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
     /**
-     * Getter method for property <tt>objectClass</tt>.
-     *
-     * @return property value of objectClass
+     * 获取调用对象Class
+     * @return
      */
     public Class<?> getObjectClass() {
         return objectClass;
     }
 
     /**
-     * Setter method for property <tt>objectClass</tt>.
+     * 设置调用对象Class
      *
-     * @param objectClass  value to be assigned to property objectClass
+     * @param objectClass 调用对象Class
      */
     public void setObjectClass(Class<?> objectClass) {
         this.objectClass = objectClass;
     }
 
     /**
-     * Getter method for property <tt>methodName</tt>.
+     * 获取方法名称
      *
-     * @return property value of methodName
+     * @return
      */
     public String getMethodName() {
         return methodName;
     }
 
     /**
-     * Setter method for property <tt>methodName</tt>.
+     * 设置方法名称
      *
-     * @param methodName  value to be assigned to property methodName
+     * @param methodName 方法名称
      */
     public void setMethodName(String methodName) {
         this.methodName = methodName;
     }
 
     /**
-     * Getter method for property <tt>params</tt>.
+     * 获取参数列表
      *
-     * @return property value of params
+     * @return
      */
-    public Object[] getParams() {
-        return params;
+    public PARAM getParam() {
+        return param;
     }
 
     /**
-     * Setter method for property <tt>params</tt>.
+     * 设置参数列表
      *
-     * @param params  value to be assigned to property params
+     * @param param 参数
+     *
      */
-    public void setParams(Object[] params) {
-        this.params = params;
+    public void setParam(PARAM param) {
+        this.param = param;
     }
 
     /**
-     * Getter method for property <tt>result</tt>.
+     * 获取结果数据
      *
-     * @return property value of result
+     * @return
      */
-    public RESULT getResult() {
-        return result;
+    public RESULT getResultData() {
+        return resultData;
     }
 
     /**
-     * Setter method for property <tt>result</tt>.
+     * 设置结果数据
      *
-     * @param result  value to be assigned to property result
+     * @param resultData 结果数据
      */
-    public void setResult(RESULT result) {
-        this.result = result;
+    public void setResultData(RESULT resultData) {
+        this.resultData = resultData;
     }
 
     /**
-     * Getter method for property <tt>directResult</tt>.
+     * 获取直接(原始)结果数据
      *
-     * @return property value of directResult
+     * @return
      */
-    public Object getDirectResult() {
-        return directResult;
+    public Object getDirectResultData() {
+        return directResultData;
     }
 
     /**
-     * Setter method for property <tt>directResult</tt>.
+     * 设置直接(原始)结果数据
      *
-     * @param directResult  value to be assigned to property directResult
+     * @param directResultData 直接(原始)结果数据
      */
-    public void setDirectResult(Object directResult) {
-        this.directResult = directResult;
+    public void setDirectResultData(Object directResultData) {
+        this.directResultData = directResultData;
     }
 
     /**
-     * Getter method for property <tt>description</tt>.
+     * 获取调用描述
      *
-     * @return property value of description
+     * @return
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Setter method for property <tt>description</tt>.
+     * 设置调用描述
      *
-     * @param description  value to be assigned to property description
+     * @param description 调用描述
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * Getter method for property <tt>state</tt>.
+     * 获取调用结果状态
      *
-     * @return property value of state
+     * @return
      */
     public int getState() {
         return state;
     }
 
     /**
-     * Setter method for property <tt>state</tt>.
+     * 设置调用结果状态
      *
-     * @param state  value to be assigned to property state
+     * @param state 结果状态
      */
     public void setState(int state) {
         this.state = state;
     }
 
     /**
-     * Getter method for property <tt>throwable</tt>.
+     * 获取异常对象
      *
-     * @return property value of throwable
+     * @return
      */
     public Throwable getThrowable() {
         return throwable;
     }
 
     /**
-     * Setter method for property <tt>throwable</tt>.
+     * 设置异常对象
      *
-     * @param throwable  value to be assigned to property throwable
+     * @param throwable 异常对象
      */
     public void setThrowable(Throwable throwable) {
         this.throwable = throwable;
     }
 
     /**
-     * Getter method for property <tt>beginTime</tt>.
+     * 获取调用开始时间
      *
-     * @return property value of beginTime
+     * @return
      */
     public long getBeginTime() {
         return beginTime;
     }
 
     /**
-     * Setter method for property <tt>beginTime</tt>.
+     * 设置调用开始时间
      *
-     * @param beginTime  value to be assigned to property beginTime
+     * @param beginTime 调用开始时间
      */
     public void setBeginTime(long beginTime) {
         this.beginTime = beginTime;
     }
 
     /**
-     * Getter method for property <tt>endTime</tt>.
+     * 获取调用结束时间
      *
-     * @return property value of endTime
+     * @return
      */
     public long getEndTime() {
         return endTime;
     }
 
     /**
-     * Setter method for property <tt>endTime</tt>.
+     * 设置结束时间
      *
-     * @param endTime  value to be assigned to property endTime
+     * @param endTime 调用结束时间
      */
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 
     /**
-     * Getter method for property <tt>traceId</tt>.
+     * 获取trace id
      *
-     * @return property value of traceId
+     * @return
      */
     public String getTraceId() {
         return traceId;
     }
 
     /**
-     * Setter method for property <tt>traceId</tt>.
+     * 设置trace id
      *
-     * @param traceId  value to be assigned to property traceId
+     * @param traceId trace id
      */
     public void setTraceId(String traceId) {
         this.traceId = traceId;
     }
 
     /**
-     * Getter method for property <tt>parametersMap</tt>.
+     * 获取参数Map
      *
-     * @return property value of parametersMap
+     * @return
      */
     public Map<String, Object> getParametersMap() {
         return parametersMap;
     }
 
     /**
-     * Setter method for property <tt>parametersMap</tt>.
+     * 设置参数Map
      *
-     * @param parametersMap  value to be assigned to property parametersMap
+     * @param parametersMap 参数Map
      */
     public void setParametersMap(Map<String, Object> parametersMap) {
         this.parametersMap = parametersMap;

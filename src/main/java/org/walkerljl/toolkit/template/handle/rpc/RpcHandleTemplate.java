@@ -1,13 +1,21 @@
 package org.walkerljl.toolkit.template.handle.rpc;
 
 import org.walkerljl.toolkit.logging.Logger;
+import org.walkerljl.toolkit.logging.LoggerFactory;
 
 /**
  * Rpc处理模板
- * 
- * @author lijunlin
+ *
+ * @author xingxun
  */
 public class RpcHandleTemplate extends AbstractRpcHandleTemplate {
+
+    /** Digest logger*/
+    private static final Logger DIGEST_LOGGER = LoggerFactory.getLogger("INTEGRATION-DIGEST");
+    /** Detail logger*/
+    private static final Logger DETAIL_LOGGER = LoggerFactory.getLogger("INTEGRATION-DETAIL");
+    /** Error logger*/
+    private static final Logger ERROR_LOGGER  = LoggerFactory.getLogger(RpcHandleTemplate.class);
 
     /**
      * 私有构造函数
@@ -32,16 +40,16 @@ public class RpcHandleTemplate extends AbstractRpcHandleTemplate {
 
     @Override
     protected Logger getDigestLogger() {
-        return null;
+        return DIGEST_LOGGER;
     }
 
     @Override
     protected Logger getDetailLogger() {
-        return null;
+        return DETAIL_LOGGER;
     }
 
     @Override
     protected Logger getErrorLogger() {
-        return null;
+        return ERROR_LOGGER;
     }
 }

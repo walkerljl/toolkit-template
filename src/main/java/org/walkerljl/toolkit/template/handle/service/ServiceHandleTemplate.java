@@ -5,12 +5,17 @@ import org.walkerljl.toolkit.logging.LoggerFactory;
 
 /**
  * 业务处理模板
- * 
- * @author lijunlin
+ *
+ * @author xingxun
  */
 public class ServiceHandleTemplate extends AbstractServiceHandleTemplate {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceHandleTemplate.class);
+    /** Digest logger*/
+    private static final Logger DIGEST_LOGGER = LoggerFactory.getLogger("SERVICE-DIGEST");
+    /** Detail logger*/
+    private static final Logger DETAIL_LOGGER = LoggerFactory.getLogger("SERVICE-DETAIL");
+    /** Logger*/
+    private static final Logger LOGGER        = LoggerFactory.getLogger(ServiceHandleTemplate.class);
 
     /**
      * 私有构造函数
@@ -28,17 +33,17 @@ public class ServiceHandleTemplate extends AbstractServiceHandleTemplate {
 
     @Override
     protected Logger getDigestLogger() {
-        return null;
+        return DIGEST_LOGGER;
     }
 
     @Override
     protected Logger getDetailLogger() {
-        return null;
+        return DETAIL_LOGGER;
     }
 
     @Override
     protected Logger getErrorLogger() {
-        return null;
+        return LOGGER;
     }
 
     /**

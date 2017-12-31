@@ -1,6 +1,7 @@
 package org.walkerljl.toolkit.template.log;
 
 /**
+ * Log constants
  *
  * @author lijunlin
  */

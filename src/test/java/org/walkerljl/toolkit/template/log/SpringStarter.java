@@ -4,7 +4,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.logging.LoggerFactory;
-import org.walkerljl.toolkit.template.service.facade.HelloFacade;
 import org.walkerljl.toolkit.template.service.integration.HelloFacadeClient;
 
 /**
@@ -20,15 +19,12 @@ public class SpringStarter {
         HelloFacadeClient helloFacadeClient = ctx.getBean("helloFacadeClient", HelloFacadeClient.class);
         try {
             helloFacadeClient.say("world");
-        } catch (Throwable e) {
-            LOGGER.error(e);
-        }
-
-        try {
             helloFacadeClient.doSomething("127.0.0.1", "haha");
+
+            helloFacadeClient.say(null);
+            helloFacadeClient.doSomething(null, null);
         } catch (Throwable e) {
             LOGGER.error(e);
         }
-
     }
 }

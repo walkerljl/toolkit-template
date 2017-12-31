@@ -1,12 +1,11 @@
-
 package org.walkerljl.toolkit.template.handle.rpc;
 
-import org.walkerljl.toolkit.standard.exception.ErrorCode;
+import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 
 /**
  * RpcErrorCode
  *
- * @author lijunlin
+ * @author xingxun
  */
 public enum RpcErrorCode implements ErrorCode {
 
@@ -15,7 +14,10 @@ public enum RpcErrorCode implements ErrorCode {
      */
     UNKOWN("10000", "未知异常"),
 
-    ;
+    /**
+     * 无效的参数
+     */
+    INVALID_PARAM("10001", "无效的参数"),;
 
     /**
      * 构造函数

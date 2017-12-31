@@ -1,6 +1,7 @@
 package org.walkerljl.toolkit.template.service.integration.impl;
 
 import org.walkerljl.toolkit.standard.Result;
+import org.walkerljl.toolkit.template.handle.rpc.RpcAssertUtil;
 import org.walkerljl.toolkit.template.handle.rpc.RpcHandleTemplate;
 import org.walkerljl.toolkit.template.handle.rpc.RpcHandler;
 import org.walkerljl.toolkit.template.log.InvocationInfo;
@@ -18,37 +19,37 @@ public class HelloFacadeClientImpl extends BaseFacadeClientImpl implements Hello
 
     @Override
     public String say(String content) {
-
-        return RpcHandleTemplate.getInstance().handle(content, new RpcHandler<String, String>() {
+        InvocationInfo<String, String> invocationInfo = new InvocationInfo<>(getClass(), "say", content);
+        return RpcHandleTemplate.getInstance().handle(invocationInfo, new RpcHandler<String, String>() {
+            @Override
+            public boolean checkParams(String content) {
+                //RpcAssertUtil.assertParam(content != null, "content");
+                return true;
+            }
 
             @Override
-            public InvocationInfo<String> handle(String content) {
+            public String handle(String content) {
                 Result<String> remotingResult = helloFacade.say(content);
-                InvocationInfo<String> invocationInfo = new InvocationInfo<>(HelloFacade.class,
-                        "say",
-                        new Object[]{content},
-                        remotingResult,
-                        remotingResult.getData(),
-                        !remotingResult.isSuccess());
-                return invocationInfo;
+                return remotingResult.getData();
             }
         });
     }
 
     @Override
     public String doSomething(String address, String something) {
-        return RpcHandleTemplate.getInstance().handle(new Object[]{address, something}, new RpcHandler<Object[], String>() {
+        InvocationInfo<Object[], String> invocationInfo = new InvocationInfo<>(getClass(), "say", new Object[] {address, something});
+        return RpcHandleTemplate.getInstance().handle(invocationInfo, new RpcHandler<Object[], String>() {
+            @Override
+            public boolean checkParams(Object[] params) {
+                RpcAssertUtil.assertTrue(params[0] != null, "address");
+                RpcAssertUtil.assertTrue(params[1] != null, "something");
+                return true;
+            }
 
             @Override
-            public InvocationInfo<String> handle(Object[] params) {
-                Result<String> remotingResult = helloFacade.doSomething((String)params[0], (String)params[1]);
-                InvocationInfo<String> invocationInfo = new InvocationInfo<>(HelloFacade.class,
-                        "doSomething",
-                        params,
-                        remotingResult,
-                        remotingResult.getData(),
-                        remotingResult.isSuccess());
-                return invocationInfo;
+            public String handle(Object[] params) {
+                Result<String> remotingResult = helloFacade.doSomething(String.valueOf(params[0]), String.valueOf(params[1]));
+                return remotingResult.getData();
             }
         });
     }

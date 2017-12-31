@@ -11,6 +11,7 @@
     <properties>
         <spring.version>4.3.1.RELEASE</spring.version>
         <org.walkerljl.toolkit.standard.version>1.0.0-SNAPSHOT</org.walkerljl.toolkit.standard.version>
+        <org.walkerljl.toolkit.logging.version>1.0.0-SNAPSHOT</org.walkerljl.toolkit.logging.version>
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -20,6 +21,11 @@
             <groupId>org.walkerljl</groupId>
             <artifactId>toolkit-standard</artifactId>
             <version>${org.walkerljl.toolkit.standard.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.walkerljl</groupId>
+            <artifactId>toolkit-logging</artifactId>
+            <version>${org.walkerljl.toolkit.logging.version}</version>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

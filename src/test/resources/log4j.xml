@@ -21,7 +21,7 @@
 
     <appender name="ERROR-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/common-error.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/common-error.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <param name="threshold" value="error"/>
@@ -34,7 +34,7 @@
     <!-- [公共Appender] 默认 -->
     <appender name="DEFAULT-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/common-default.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/common-default.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">

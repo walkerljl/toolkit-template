@@ -2,8 +2,7 @@ package org.walkerljl.toolkit.template.handle;
 
 import org.walkerljl.toolkit.logging.Logger;
 import org.walkerljl.toolkit.standard.exception.AppException;
-import org.walkerljl.toolkit.standard.exception.AppRpcException;
-import org.walkerljl.toolkit.standard.exception.ErrorCode;
+import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 import org.walkerljl.toolkit.template.log.InvocationInfo;
 import org.walkerljl.toolkit.template.log.LoggerDetailUtil;
 import org.walkerljl.toolkit.template.log.LoggerDigestUtil;
@@ -17,36 +16,30 @@ import org.walkerljl.toolkit.template.log.LoggerUtil;
  */
 public abstract class AbstractHandleTemplate {
 
-    protected  <RESULT> void assertInvocationInfo(InvocationInfo<RESULT> invocationInfo) {
+    /**
+     * 记录日志
+     *
+     * @param invocationInfo 调用信息
+     * @param <RESULT>
+     */
+    protected <PARAM, RESULT> void doLog(InvocationInfo<PARAM, RESULT> invocationInfo) {
         if (invocationInfo == null) {
-            rethrowException(AppErrorCode.UNKOWN, "invocation info is null.");
+            return;
         }
-        if (!invocationInfo.isSuccess()) {
-            rethrowException(AppErrorCode.UNKOWN, invocationInfo.getTraceInfo());
-        }
-    }
-
-    protected <RESULT> void doLog(InvocationInfo<RESULT> invocationInfo) {
+        //记录摘要日志
         LoggerDigestUtil.logDigest(invocationInfo, getDigestLogger());
+        //记录详细日志
         LoggerDetailUtil.logDetail(invocationInfo, getDetailLogger());
+
+        //记录异常日志
         Logger errorLogger = getErrorLogger();
         if (errorLogger == null) {
-           return;
+            return;
         }
         Throwable e = invocationInfo.getThrowable();
-        if (!(e instanceof AppException) || !(((AppException)e).getCode() instanceof ErrorCode)) {
+        boolean isRecordErrorLog = (e != null && (!(e instanceof AppException) || !(((AppException) e).getCode() instanceof ErrorCode)));
+        if (isRecordErrorLog) {
             LoggerUtil.error(errorLogger, e);
-        }
-    }
-
-    protected void tryRethrowException(Throwable e) {
-        if (canRethrowException()) {
-            //rethrow the exception
-            if (e instanceof RuntimeException) {
-                rethrowException((RuntimeException) e);
-            } else {
-                throw new Error(e.getMessage(), e);
-            }
         }
     }
 
@@ -59,17 +52,24 @@ public abstract class AbstractHandleTemplate {
         return true;
     }
 
-    protected void rethrowException(ErrorCode errorCode, String errorMsg) {
-        throw new AppRpcException(errorCode, errorMsg);
-    }
-
-    protected void rethrowException(RuntimeException runtimeException) {
-        throw new AppRpcException(runtimeException);
-    }
-
+    /**
+     * 获取记录摘要的日志对象
+     *
+     * @return
+     */
     protected abstract Logger getDigestLogger();
 
+    /**
+     * 获取记录详情的日志对象
+     *
+     * @return
+     */
     protected abstract Logger getDetailLogger();
 
+    /**
+     * 获取记录错误的日志对象
+     *
+     * @return
+     */
     protected abstract Logger getErrorLogger();
 }

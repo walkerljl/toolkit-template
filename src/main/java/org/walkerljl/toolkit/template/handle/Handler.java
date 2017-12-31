@@ -1,11 +1,9 @@
 package org.walkerljl.toolkit.template.handle;
 
-import org.walkerljl.toolkit.template.log.InvocationInfo;
-
 /**
  * Handler
  *
- * @author lijunlin
+ * @author xingxun
  */
 public interface Handler<PARAM, RESULT> {
 
@@ -15,7 +13,7 @@ public interface Handler<PARAM, RESULT> {
      * @param param 参数
      * @return
      */
-    InvocationInfo<RESULT> checkParams(PARAM param);
+    boolean checkParams(PARAM param);
 
     /**
      * 业务处理
@@ -23,5 +21,5 @@ public interface Handler<PARAM, RESULT> {
      * @param param 参数
      * @return
      */
-    InvocationInfo<RESULT> handle(PARAM param);
+    RESULT handle(PARAM param);
 }
