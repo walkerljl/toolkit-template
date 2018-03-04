@@ -53,8 +53,8 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
                 if (errorCode != null) {
                     result = org.walkerljl.toolkit.standard.Result.failure(errorCode.getCode(), e.getMessage());
                 } else {
-                    result = org.walkerljl.toolkit.standard.Result.failure(ServiceErrorCode.UNKOWN.getCode(),
-                            ServiceErrorCode.UNKOWN.getDescription());
+                    result = org.walkerljl.toolkit.standard.Result.failure(ServiceErrorCode.UNKNOWN.getCode(),
+                            ServiceErrorCode.UNKNOWN.getDescription());
                     result.setRemark(e.getMessage());
                 }
             }
@@ -110,7 +110,7 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
      */
     private <PARAM, RESULT> void assertInvocationInfoNotNull(InvocationInfo<PARAM, RESULT> invocationInfo) {
         if (invocationInfo == null) {
-            throw new AppServiceException(ServiceErrorCode.UNKOWN, "invocation info is null.");
+            throw new AppServiceException(ServiceErrorCode.UNKNOWN, "invocation info is null.");
         }
     }
 }

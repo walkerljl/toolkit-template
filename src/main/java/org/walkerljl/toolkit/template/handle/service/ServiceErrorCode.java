@@ -12,12 +12,12 @@ public enum ServiceErrorCode implements ErrorCode {
     /**
      * 未知异常
      */
-    UNKOWN("20000", "未知异常"),
+    UNKNOWN("unknown", "未知异常"),
 
     /**
      * 无效的参数
      */
-    INVALID_PARAM("20001", "无效的参数"),;
+    INVALID_PARAM("param-invalid", "无效的参数"),;
 
     /**
      * 构造函数

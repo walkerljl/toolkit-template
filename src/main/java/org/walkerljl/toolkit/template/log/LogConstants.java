@@ -3,7 +3,7 @@ package org.walkerljl.toolkit.template.log;
 /**
  * Log constants
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class LogConstants {
 

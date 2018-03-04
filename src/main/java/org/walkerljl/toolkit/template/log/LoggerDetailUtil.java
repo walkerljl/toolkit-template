@@ -21,7 +21,7 @@ public class LoggerDetailUtil extends AbstractLogUtil {
      * @param <PARAM>
      * @param <RESULT>
      */
-    public static <PARAM, RESULT> void logDetail(InvocationInfo invocationInfo, Logger logger) {
+    public static <PARAM, RESULT> void logDetail(InvocationInfo<PARAM, RESULT> invocationInfo, Logger logger) {
         if (logger == null) {
             return;
         }

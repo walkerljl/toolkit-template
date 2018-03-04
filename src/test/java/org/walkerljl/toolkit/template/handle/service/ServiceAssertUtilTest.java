@@ -64,11 +64,11 @@ public class ServiceAssertUtilTest {
         Assert.assertTrue(result);
         result = false;
 
-        ServiceAssertUtil.assertParam(true, ServiceErrorCode.UNKOWN, "propertName");
+        ServiceAssertUtil.assertParam(true, ServiceErrorCode.UNKNOWN, "propertName");
         try {
-            ServiceAssertUtil.assertParam(false, ServiceErrorCode.UNKOWN, propertName);
+            ServiceAssertUtil.assertParam(false, ServiceErrorCode.UNKNOWN, propertName);
         } catch (AppServiceException e) {
-            if (e.getCode() == ServiceErrorCode.UNKOWN && (String.format("%s:%s", ServiceErrorCode.UNKOWN.getDescription(), propertName)).equals(e.getMessage())) {
+            if (e.getCode() == ServiceErrorCode.UNKNOWN && (String.format("%s:%s", ServiceErrorCode.UNKNOWN.getDescription(), propertName)).equals(e.getMessage())) {
                 result = true;
             }
         }

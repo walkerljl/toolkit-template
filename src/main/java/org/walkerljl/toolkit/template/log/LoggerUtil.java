@@ -8,7 +8,7 @@ import org.walkerljl.toolkit.logging.Logger;
 /**
  * LoggerUtil
  *
- * @author lijunlin
+ * @author xingxun
  */
 public class LoggerUtil extends LogConstants {
 
