@@ -3,7 +3,7 @@ package org.walkerljl.toolkit.template.cache;
 /**
  * 缓存数据源
  *
- * @author lijunlin
+ * @author xingxun
  */
 public interface CacheSource<T> {
 

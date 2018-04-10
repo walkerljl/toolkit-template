@@ -3,7 +3,7 @@ package org.walkerljl.toolkit.template.cache;
 /**
  * 可被击穿的缓存数据源
  *
- * @author lijunlin
+ * @author xingxun
  */
 public abstract class StrikedCacheSource<T> implements CacheSource<T> {
 

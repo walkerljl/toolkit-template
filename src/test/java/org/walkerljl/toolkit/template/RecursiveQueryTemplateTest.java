@@ -2,16 +2,68 @@ package org.walkerljl.toolkit.template;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.walkerljl.toolkit.template.compute.RecursiveQueryTemplate;
 
 /**
+ * RecursiveQueryTemplateTest
  *
  * @author xingxun
  */
 public class RecursiveQueryTemplateTest {
+
+    @Test
+    public void testForInvalidParam() {
+        List<PagingQueryResult> actualResultList = new RecursiveQueryTemplate<PagingQueryParam, PagingQueryResult>() {
+            @Override
+            protected boolean isContinue(PagingQueryParam pagingQueryParam) {
+                return false;
+            }
+
+            @Override
+            protected List<PagingQueryResult> query0(PagingQueryParam pagingQueryParam) {
+                return null;
+            }
+        }.query(null);
+        Assert.assertNull(actualResultList);
+    }
+
+    @Test
+    public void testForBreakLoop() {
+        final AtomicInteger counter = new AtomicInteger(0);
+        new RecursiveQueryTemplate<PagingQueryParam, PagingQueryResult>() {
+            @Override
+            protected boolean isContinue(PagingQueryParam pagingQueryParam) {
+                return true;
+            }
+
+            @Override
+            protected List<PagingQueryResult> query0(PagingQueryParam pagingQueryParam) {
+                counter.incrementAndGet();
+                return null;
+            }
+        }.query(new PagingQueryParam());
+
+        Assert.assertEquals(counter.get(), 1);
+
+        new RecursiveQueryTemplate<PagingQueryParam, PagingQueryResult>() {
+            @Override
+            protected boolean isContinue(PagingQueryParam pagingQueryParam) {
+                return true;
+            }
+
+            @Override
+            protected List<PagingQueryResult> query0(PagingQueryParam pagingQueryParam) {
+                counter.incrementAndGet();
+                return new ArrayList<PagingQueryResult>();
+            }
+        }.query(new PagingQueryParam());
+
+        Assert.assertEquals(counter.get(), 2);
+    }
 
     @Test
     public void test() {

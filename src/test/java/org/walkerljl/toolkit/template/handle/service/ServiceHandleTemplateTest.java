@@ -5,7 +5,7 @@ import org.walkerljl.toolkit.template.service.facade.HelloFacade;
 import org.walkerljl.toolkit.template.service.facade.impl.HelloFacadeImpl;
 
 /**
- * @author lijunlin
+ * @author xingxun
  */
 public class ServiceHandleTemplateTest {
 

@@ -123,7 +123,7 @@
     <!-- SERVICE LOGGER end-->
 
     <root>
-        <level value="INFO"/>
+        <level value="DEBUG"/>
         <appender-ref ref="DEFAULT-APPENDER"/>
         <appender-ref ref="ERROR-APPENDER"/>
         <appender-ref ref="STDERR-APPENDER"/>

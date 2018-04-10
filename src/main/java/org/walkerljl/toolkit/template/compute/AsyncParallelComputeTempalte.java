@@ -2,6 +2,7 @@ package org.walkerljl.toolkit.template.compute;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
      * @throws InterruptedException
      */
     public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, PARAM[] params, boolean onlyOne) throws ExecutionException, InterruptedException {
-        if (params == null || params.length == 0) {
+        if (isEmpty(params)) {
             return null;
         }
         List<PARAM> paramList = Arrays.asList(params);
@@ -78,7 +79,7 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
      * @throws ExecutionException
      */
     public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, List<PARAM> params, boolean onlyOne) throws InterruptedException, ExecutionException {
-        if (params == null || params.isEmpty()) {
+        if (isEmpty(params)) {
             return null;
         }
 
@@ -124,6 +125,28 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
         }
         return resultMap;
     }
+
+    /**
+     * 是否为空
+     *
+     * @param collection 集合
+     * @return
+     */
+    private boolean isEmpty(Collection<?> collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    /**
+     * 是否为空
+     *
+     * @param array 数组
+     * @param <E>
+     * @return
+     */
+    private <E> boolean isEmpty(E[] array) {
+        return array == null || array.length == 0;
+    }
+
 
     /**
      * 完成单个任务计算功能
