@@ -33,7 +33,8 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, PARAM[] params) throws ExecutionException, InterruptedException {
+    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, PARAM[] params)
+            throws ExecutionException, InterruptedException {
         return compute(threadPoolExecutor, params, false);
     }
 
@@ -47,7 +48,8 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
      * @throws ExecutionException
      * @throws InterruptedException
      */
-    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, PARAM[] params, boolean onlyOne) throws ExecutionException, InterruptedException {
+    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, PARAM[] params, boolean onlyOne)
+            throws ExecutionException, InterruptedException {
         if (isEmpty(params)) {
             return null;
         }
@@ -64,7 +66,8 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
      * @throws InterruptedException
      * @throws ExecutionException
      */
-    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, List<PARAM> params) throws InterruptedException, ExecutionException {
+    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, List<PARAM> params)
+            throws InterruptedException, ExecutionException {
         return compute(threadPoolExecutor, params, false);
     }
 
@@ -78,7 +81,8 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
      * @throws InterruptedException
      * @throws ExecutionException
      */
-    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, List<PARAM> params, boolean onlyOne) throws InterruptedException, ExecutionException {
+    public Map<PARAM, RESULT> compute(ThreadPoolExecutor threadPoolExecutor, List<PARAM> params, boolean onlyOne)
+            throws InterruptedException, ExecutionException {
         if (isEmpty(params)) {
             return null;
         }
@@ -146,7 +150,6 @@ public abstract class AsyncParallelComputeTempalte<PARAM, RESULT> {
     private <E> boolean isEmpty(E[] array) {
         return array == null || array.length == 0;
     }
-
 
     /**
      * 完成单个任务计算功能

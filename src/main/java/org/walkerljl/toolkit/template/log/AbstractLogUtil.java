@@ -5,7 +5,7 @@ package org.walkerljl.toolkit.template.log;
  *
  * @author xingxun
  */
-public  class AbstractLogUtil extends LogConstants {
+public abstract class AbstractLogUtil extends LogConstants {
 
     /**
      * 获取String值

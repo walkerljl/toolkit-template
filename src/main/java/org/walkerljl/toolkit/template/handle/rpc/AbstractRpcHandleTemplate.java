@@ -29,17 +29,17 @@ public abstract class AbstractRpcHandleTemplate extends AbstractHandleTemplate {
     public <PARAM, RESULT> RESULT handle(InvocationInfo<PARAM, RESULT> invocationInfo, RpcHandler<PARAM, RESULT> handler) {
         RESULT result = null;
         try {
-            //校验调用信息
-            assertInvocationInfoNotNull(invocationInfo);
             // 参数校验
+            RpcAssertUtil.assertParam(invocationInfo != null, "invocationInfo");
+            RpcAssertUtil.assertParam(handler != null, "handler");
+
+            // 业务参数校验
             boolean isPassedCheckParams = handler.checkParams(invocationInfo.getParam());
-            if (!isPassedCheckParams) {
-                throw new AppRpcException(RpcErrorCode.INVALID_PARAM);
-            }
+            RpcAssertUtil.assertTrue(isPassedCheckParams, RpcErrorCode.INVALID_PARAM);
+
             //业务执行
             result = handler.handle(invocationInfo.getParam());
-            //记录结果到调用信息
-            invocationInfo.markSuccess(result);
+
         } catch (Throwable e) {
             if (invocationInfo != null) {
                 invocationInfo.markFailure(e);
@@ -50,7 +50,9 @@ public abstract class AbstractRpcHandleTemplate extends AbstractHandleTemplate {
             } catch (Throwable e) {
                 LoggerUtil.error(LOGGER, e);
             }
-            assertInvocationInfo(invocationInfo);
+            if (canRethrowException()) {
+                assertInvocationInfo(invocationInfo);
+            }
         }
         return result;
     }
@@ -63,31 +65,19 @@ public abstract class AbstractRpcHandleTemplate extends AbstractHandleTemplate {
      * @param <RESULT>
      */
     private <PARAM, RESULT> void assertInvocationInfo(InvocationInfo<PARAM, RESULT> invocationInfo) {
-        if (!canRethrowException()) {
+        RpcAssertUtil.assertParam(invocationInfo != null, "invocationInfo");
+        if (invocationInfo.isSuccess()) {
             return;
         }
-        //不为空
-        assertInvocationInfoNotNull(invocationInfo);
-        if (!invocationInfo.isSuccess()) {
-            String errorMsg = String.format("Fail to invocation:%s.", invocationInfo.getTraceInfo());
-            if (invocationInfo.getThrowable() == null) {
-                throw new AppRpcException(errorMsg);
+        Throwable throwable = invocationInfo.getThrowable();
+        if (throwable == null) {
+            throw new AppRpcException(invocationInfo.getTraceInfo());
+        } else {
+            if (throwable instanceof AppRpcException) {
+                throw new AppRpcException(((AppRpcException) throwable).getCode(), throwable.getMessage(), throwable);
             } else {
-                throw new AppRpcException(errorMsg, invocationInfo.getThrowable());
+                throw new AppRpcException(throwable.getMessage(), throwable);
             }
-        }
-    }
-
-    /**
-     * 校验调用信息不为空
-     *
-     * @param invocationInfo
-     * @param <PARAM>
-     * @param <RESULT>
-     */
-    private <PARAM, RESULT> void assertInvocationInfoNotNull(InvocationInfo<PARAM, RESULT> invocationInfo) {
-        if (invocationInfo == null) {
-            throw new AppRpcException(RpcErrorCode.UNKOWN, "invocation info is null.");
         }
     }
 }

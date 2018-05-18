@@ -10,14 +10,29 @@ import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 public enum ServiceErrorCode implements ErrorCode {
 
     /**
-     * 未知异常
+     * 网络繁忙，请稍后再试。
      */
-    UNKNOWN("unknown", "未知异常"),
+    UNKNOWN("unknown", "网络繁忙，请稍后再试"),
 
     /**
      * 无效的参数
      */
-    INVALID_PARAM("param-invalid", "无效的参数"),;
+    INVALID_PARAM("invalid_param", "无效的参数"),
+
+    /**
+     * 无效的参数签名
+     */
+    INVALID_SIGNATURE("invalid_signature", "无效的参数签名"),
+
+    /**
+     * 无操作权限
+     */
+    PERMISSION_DENIED("permission_denied", "无操作权限"),
+
+    /**
+     * 重复操作
+     */
+    REPETITIVE_OPERATION("repetitive_operation", "重复操作"),;
 
     /**
      * 构造函数

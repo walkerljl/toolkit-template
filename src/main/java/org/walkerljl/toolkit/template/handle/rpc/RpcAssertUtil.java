@@ -1,10 +1,10 @@
 package org.walkerljl.toolkit.template.handle.rpc;
 
 import org.walkerljl.toolkit.standard.exception.AppRpcException;
-import org.walkerljl.toolkit.standard.exception.AppServiceException;
 import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 
 /**
+ * RpcAssertUtil
  *
  * @author xingxun
  */

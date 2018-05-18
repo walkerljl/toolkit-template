@@ -302,5 +302,4 @@ public class LoggerUtil extends LogConstants {
         return getSerialNumber();
     }
 
-
 }

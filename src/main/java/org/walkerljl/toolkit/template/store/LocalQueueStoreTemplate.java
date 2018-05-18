@@ -4,7 +4,6 @@ import java.util.concurrent.BlockingQueue;
 
 import org.walkerljl.toolkit.standard.Machine;
 import org.walkerljl.toolkit.standard.abstracts.AbstractMachine;
-
 import org.walkerljl.toolkit.standard.exception.AppException;
 import org.walkerljl.toolkit.standard.exception.machine.CannotStartMachineException;
 import org.walkerljl.toolkit.standard.exception.machine.CannotStopMachineException;
@@ -18,10 +17,10 @@ import org.walkerljl.toolkit.standard.exception.machine.MachineException;
  */
 public class LocalQueueStoreTemplate<T> extends AbstractMachine implements Machine {
 
-    private String serviceGroup;
-    private String serviceId;
+    private String           serviceGroup;
+    private String           serviceId;
     private BlockingQueue<T> blockingQueue;
-    private Storer storer;
+    private Storer           storer;
 
     public LocalQueueStoreTemplate(String serviceGroup, String serviceId, BlockingQueue<T> blockingQueue, Storer<T> storer) {
         this.serviceGroup = serviceGroup;

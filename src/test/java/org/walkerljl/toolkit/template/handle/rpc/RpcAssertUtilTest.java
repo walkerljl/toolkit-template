@@ -6,6 +6,7 @@ import org.walkerljl.toolkit.standard.exception.AppRpcException;
 import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 
 /**
+ * RpcAssertUtilTest
  *
  * @author xingxun
  */
@@ -49,13 +50,13 @@ public class RpcAssertUtilTest {
 
     @Test
     public void assertParam() {
-        String propertName = "propertName";
-        RpcAssertUtil.assertParam(true, "propertName");
+        String paramName = "paramName";
+        RpcAssertUtil.assertParam(true, "paramName");
         boolean result = false;
         try {
-            RpcAssertUtil.assertParam(false, propertName);
+            RpcAssertUtil.assertParam(false, paramName);
         } catch (AppRpcException e) {
-            String errorMsg = String.format("%s:%s", RpcErrorCode.INVALID_PARAM.getDescription(), propertName);
+            String errorMsg = String.format("%s:%s", RpcErrorCode.INVALID_PARAM.getDescription(), paramName);
             if (e.getCode() == RpcErrorCode.INVALID_PARAM && (errorMsg).equals(e.getMessage())) {
                 result = true;
             }
@@ -63,11 +64,11 @@ public class RpcAssertUtilTest {
         Assert.assertTrue(result);
         result = false;
 
-        RpcAssertUtil.assertParam(true, RpcErrorCode.UNKOWN, "propertName");
+        RpcAssertUtil.assertParam(true, RpcErrorCode.UNKNOWN, "paramName");
         try {
-            RpcAssertUtil.assertParam(false, RpcErrorCode.UNKOWN, propertName);
+            RpcAssertUtil.assertParam(false, RpcErrorCode.UNKNOWN, paramName);
         } catch (AppRpcException e) {
-            if (e.getCode() == RpcErrorCode.UNKOWN && (String.format("%s:%s", RpcErrorCode.UNKOWN.getDescription(), propertName)).equals(e.getMessage())) {
+            if (e.getCode() == RpcErrorCode.UNKNOWN && (String.format("%s:%s", RpcErrorCode.UNKNOWN.getDescription(), paramName)).equals(e.getMessage())) {
                 result = true;
             }
         }

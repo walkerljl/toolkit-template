@@ -10,14 +10,16 @@ import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 public enum RpcErrorCode implements ErrorCode {
 
     /**
-     * 未知异常
+     * 网络繁忙，请稍后再试。
      */
-    UNKOWN("10000", "未知异常"),
+    UNKNOWN("unknown", "网络繁忙，请稍后再试"),
 
     /**
      * 无效的参数
      */
-    INVALID_PARAM("10001", "无效的参数"),;
+    INVALID_PARAM("invalid_param", "无效的参数"),
+
+    ;
 
     /**
      * 构造函数

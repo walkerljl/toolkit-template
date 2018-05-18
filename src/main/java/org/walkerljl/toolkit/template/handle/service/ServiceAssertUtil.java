@@ -17,7 +17,6 @@ public class ServiceAssertUtil {
      * @param message 消息
      */
     public static void assertTrue(boolean expression, String message) {
-
         if (!expression) {
             throw new AppServiceException(message);
         }
@@ -30,7 +29,6 @@ public class ServiceAssertUtil {
      * @param errorCode 错误码
      */
     public static void assertTrue(boolean expression, ErrorCode errorCode) {
-
         if (!expression) {
             throw new AppServiceException(errorCode);
         }
@@ -44,7 +42,6 @@ public class ServiceAssertUtil {
      * @param message 消息
      */
     public static void assertTrue(boolean expression, ErrorCode errorCode, String message) {
-
         if (!expression) {
             throw new AppServiceException(errorCode, message);
         }
@@ -57,7 +54,6 @@ public class ServiceAssertUtil {
      * @param paramName 参数名称
      */
     public static void assertParam(boolean expression, String paramName) {
-
         assertParam(expression, ServiceErrorCode.INVALID_PARAM, paramName);
     }
 
@@ -69,7 +65,6 @@ public class ServiceAssertUtil {
      * @param paramName 参数名称
      */
     public static void assertParam(boolean expression, ErrorCode errorCode, String paramName) {
-
         if (!expression) {
             String message = String.format("%s:%s", errorCode.getDescription(), paramName);
             throw new AppServiceException(errorCode, message);

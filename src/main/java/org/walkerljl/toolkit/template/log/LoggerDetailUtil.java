@@ -56,11 +56,12 @@ public class LoggerDetailUtil extends AbstractLogUtil {
         sb.append(LOG_PARAM_PREFIX).append(String.valueOf(invocationInfo.getParam()));
 
         sb.append(LOG_PARAM_SUFFIX).append(LOG_PARAM_PREFIX);
-        sb.append(null == invocationInfo.getDirectResultData() ? LOG_DEFAULT : invocationInfo.getDirectResultData()).append(LOG_PARAM_SUFFIX);
+        sb.append(null == invocationInfo.getDirectResultData() ? LOG_DEFAULT : invocationInfo.getDirectResultData()).append(
+                LOG_PARAM_SUFFIX);
         //异常
         sb.append(LOG_PARAM_PREFIX).append(THROWABLE);
         String message = LOG_DEFAULT;
-        if(invocationInfo.getThrowable() != null){
+        if (invocationInfo.getThrowable() != null) {
             message = invocationInfo.getThrowable().getMessage();
         }
         sb.append(message).append(LOG_PARAM_SUFFIX);

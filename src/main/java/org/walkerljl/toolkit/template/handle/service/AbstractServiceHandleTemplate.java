@@ -5,7 +5,6 @@ import org.walkerljl.toolkit.logging.LoggerFactory;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
 import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 import org.walkerljl.toolkit.template.handle.AbstractHandleTemplate;
-import org.walkerljl.toolkit.template.handle.rpc.RpcErrorCode;
 import org.walkerljl.toolkit.template.log.InvocationInfo;
 import org.walkerljl.toolkit.template.log.LoggerUtil;
 
@@ -31,17 +30,20 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
                                                                                 ServiceHandler<PARAM, RESULT> handler) {
         org.walkerljl.toolkit.standard.Result<RESULT> result = null;
         try {
-            //校验调用信息
-            assertInvocationInfoNotNull(invocationInfo);
             // 参数校验
+            ServiceAssertUtil.assertParam(invocationInfo != null, "invocationInfo");
+            ServiceAssertUtil.assertParam(handler != null, "handler");
+
+            // 业务参数校验
             boolean isPassedCheckParams = handler.checkParams(invocationInfo.getParam());
-            if (!isPassedCheckParams) {
-                throw new AppServiceException(ServiceErrorCode.INVALID_PARAM);
-            }
-            //业务执行
+            ServiceAssertUtil.assertTrue(isPassedCheckParams, ServiceErrorCode.INVALID_PARAM);
+
+            // 业务执行
             RESULT originResult = handler.handle(invocationInfo.getParam());
-            //构建Success消息
+            // 构建Success消息
             result = org.walkerljl.toolkit.standard.Result.success(originResult);
+
+            // 标注是否成功
             invocationInfo.markSuccess(result, (result == null ? null : result.getData()));
         } catch (Throwable e) {
             if (invocationInfo != null) {
@@ -51,7 +53,7 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
             if (!canRethrowException()) {
                 ErrorCode errorCode = (e instanceof AppServiceException) ? ((AppServiceException) e).getCode() : null;
                 if (errorCode != null) {
-                    result = org.walkerljl.toolkit.standard.Result.failure(errorCode.getCode(), e.getMessage());
+                    result = org.walkerljl.toolkit.standard.Result.failure(errorCode.getCode(), errorCode.getDescription());
                 } else {
                     result = org.walkerljl.toolkit.standard.Result.failure(ServiceErrorCode.UNKNOWN.getCode(),
                             ServiceErrorCode.UNKNOWN.getDescription());
@@ -60,11 +62,15 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
             }
         } finally {
             try {
+                //设置原始数据
+                invocationInfo.setDirectResultData(result);
                 doLog(invocationInfo);
             } catch (Throwable e) {
                 LoggerUtil.error(LOGGER, e);
             }
-            assertInvocationInfo(invocationInfo);
+            if (canRethrowException()) {
+                assertInvocationInfo(invocationInfo);
+            }
         }
         return result;
     }
@@ -86,31 +92,20 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
      * @param <RESULT>
      */
     private <PARAM, RESULT> void assertInvocationInfo(InvocationInfo<PARAM, RESULT> invocationInfo) {
-        if (!canRethrowException()) {
+        ServiceAssertUtil.assertParam(invocationInfo != null, "invocationInfo");
+        if (invocationInfo.isSuccess()) {
             return;
         }
-        //不为空
-        assertInvocationInfoNotNull(invocationInfo);
-        if (!invocationInfo.isSuccess()) {
-            String errorMsg = String.format("Fail to invocation:%s.", invocationInfo.getTraceInfo());
-            if (invocationInfo.getThrowable() == null) {
-                throw new AppServiceException(errorMsg);
-            } else {
-                throw new AppServiceException(errorMsg, invocationInfo.getThrowable());
-            }
-        }
-    }
 
-    /**
-     * 校验调用信息不为空
-     *
-     * @param invocationInfo
-     * @param <PARAM>
-     * @param <RESULT>
-     */
-    private <PARAM, RESULT> void assertInvocationInfoNotNull(InvocationInfo<PARAM, RESULT> invocationInfo) {
-        if (invocationInfo == null) {
-            throw new AppServiceException(ServiceErrorCode.UNKNOWN, "invocation info is null.");
+        Throwable throwable = invocationInfo.getThrowable();
+        if (throwable == null) {
+            throw new AppServiceException(invocationInfo.getTraceInfo());
+        } else {
+            if (throwable instanceof AppServiceException) {
+                throw new AppServiceException(((AppServiceException) throwable).getCode(), throwable.getMessage(), throwable);
+            } else {
+                throw new AppServiceException(throwable.getMessage(), throwable);
+            }
         }
     }
 }

@@ -33,9 +33,6 @@ public abstract class AbstractHandleTemplate {
 
         //记录异常日志
         Logger errorLogger = getErrorLogger();
-        if (errorLogger == null) {
-            return;
-        }
         Throwable e = invocationInfo.getThrowable();
         boolean isRecordErrorLog = (e != null && (!(e instanceof AppException) || !(((AppException) e).getCode() instanceof ErrorCode)));
         if (isRecordErrorLog) {

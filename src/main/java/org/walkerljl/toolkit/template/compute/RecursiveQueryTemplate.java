@@ -28,9 +28,9 @@ public abstract class RecursiveQueryTemplate<PARAM, RESULT> {
                 break;
             }
             resultList.addAll(partResultList);
-        } while(isContinue(param));
+        } while (isContinue(param));
 
-        return  resultList;
+        return resultList;
     }
 
     /**

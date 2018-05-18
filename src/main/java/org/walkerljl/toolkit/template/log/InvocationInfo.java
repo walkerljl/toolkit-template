@@ -1,9 +1,9 @@
 package org.walkerljl.toolkit.template.log;
 
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.walkerljl.toolkit.standard.model.BaseEntity;
 
 /**
  * 调用信息
@@ -11,7 +11,7 @@ import java.util.Map;
  * @author xingxun
  * @Date 2016/11/25
  */
-public class InvocationInfo<PARAM, RESULT> implements Serializable {
+public class InvocationInfo<PARAM, RESULT> extends BaseEntity {
 
     /** 状态:成功*/
     public static final int STATE_SUCCESS = 1;
@@ -19,19 +19,19 @@ public class InvocationInfo<PARAM, RESULT> implements Serializable {
     public static final int STATE_FAILURE = 0;
 
     /** 应用名称*/
-    private String appName;
+    private String   appName;
     /** 对象Class*/
     private Class<?> objectClass;
     /** 方法名称*/
-    private String methodName;
+    private String   methodName;
     /** 参数*/
-    private PARAM param;
+    private PARAM    param;
     /** 结果数据*/
-    private RESULT resultData;
+    private RESULT   resultData;
     /** 原始结果数据*/
-    private Object directResultData;
+    private Object   directResultData;
     /** 描述*/
-    private String description;
+    private String   description;
     /** 状态*/
     private int state = STATE_SUCCESS;
     /** 异常对象*/
@@ -39,7 +39,7 @@ public class InvocationInfo<PARAM, RESULT> implements Serializable {
     /** 开始时间*/
     private long beginTime = System.currentTimeMillis();
     /** 结束时间*/
-    private long endTime = 0;
+    private long endTime   = 0;
     /** trace id*/
     private String traceId;
     /** 参数Map*/
@@ -55,7 +55,8 @@ public class InvocationInfo<PARAM, RESULT> implements Serializable {
      * @param resultData 结果数据
      * @param isSuccess 调用是否成功(true:成功,false:失败)
      */
-    public InvocationInfo(Class<?> objectClass, String methodName, PARAM param, Object directResultData, RESULT resultData, boolean isSuccess) {
+    public InvocationInfo(Class<?> objectClass, String methodName, PARAM param, Object directResultData, RESULT resultData,
+                          boolean isSuccess) {
         this.objectClass = objectClass;
         this.methodName = methodName;
         this.param = param;

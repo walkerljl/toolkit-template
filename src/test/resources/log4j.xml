@@ -46,7 +46,7 @@
     <!-- INTEGRATION APPENDER start-->
     <appender name="INTEGRATION-DETAIL-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/integration-detail.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/integration.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -69,7 +69,7 @@
     <!-- SERVICE APPENDER start-->
     <appender name="SERVICE-DETAIL-APPENDER"
               class="org.apache.log4j.RollingFileAppender">
-        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/service-detail.log"/>
+        <param name="file" value="/Users/walkerljl/logs/walkerljl/toolkit-template/service.log"/>
         <param name="append" value="true"/>
         <param name="encoding" value="UTF-8"/>
         <layout class="org.apache.log4j.PatternLayout">
@@ -124,6 +124,7 @@
 
     <root>
         <level value="DEBUG"/>
+        <appender-ref ref="STDOUT-APPENDER"/>
         <appender-ref ref="DEFAULT-APPENDER"/>
         <appender-ref ref="ERROR-APPENDER"/>
         <appender-ref ref="STDERR-APPENDER"/>

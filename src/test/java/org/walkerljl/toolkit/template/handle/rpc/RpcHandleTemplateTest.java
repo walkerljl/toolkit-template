@@ -1,6 +1,7 @@
 package org.walkerljl.toolkit.template.handle.rpc;
 
 import org.junit.Test;
+import org.walkerljl.toolkit.template.BaseUnitTest;
 import org.walkerljl.toolkit.template.service.facade.HelloFacade;
 import org.walkerljl.toolkit.template.service.facade.impl.HelloFacadeImpl;
 import org.walkerljl.toolkit.template.service.integration.impl.HelloFacadeClientImpl;
@@ -9,17 +10,13 @@ import org.walkerljl.toolkit.template.service.integration.impl.HelloFacadeClient
  *
  * @author xingxun
  */
-public class RpcHandleTemplateTest {
+public class RpcHandleTemplateTest extends BaseUnitTest {
 
     @Test
-    public void test() {
-        HelloFacade helloFacade = new HelloFacadeImpl();
-        HelloFacadeClientImpl helloFacadeClient = new HelloFacadeClientImpl();
-        helloFacadeClient.setHelloFacade(helloFacade);
-        helloFacadeClient.say("world");
-        helloFacadeClient.doSomething("127.0.0.1", "haha");
+    public void testForLogger() {
 
-        helloFacadeClient.say(null);
-        helloFacadeClient.doSomething(null, null);
+        RpcHandleTemplate.getInstance().getDigestLogger();
+        RpcHandleTemplate.getInstance().getDetailLogger();
+        RpcHandleTemplate.getInstance().getErrorLogger();
     }
 }

@@ -1,293 +1,320 @@
-//package org.walkerljl.toolkit.template.handle.service;
-//
-//import org.testng.Assert;
-//import org.testng.annotations.Test;
-//import org.walkerljl.toolkit.logging.Logger;
-//import org.walkerljl.toolkit.logging.LoggerFactory;
-//import org.walkerljl.toolkit.standard.Result;
-//import org.walkerljl.toolkit.standard.exception.AppException;
-//import org.walkerljl.toolkit.standard.exception.AppServiceException;
-//
-///**
-// * @author lijunlin
-// */
-//public class AbstractServiceHandleTemplateTest {
-//
-//    private String checkParamFailedErrorMsg = ServiceErrorCode.INVALID_PARAM.getDescription();
-//
-//    @Test
-//    public void testCaseForNullLogger() {
-//
-//        AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
-//            @Override
-//            public Logger getLogger() {
-//                return null;
-//            }
-//        };
-//
-//        String actualMessagePrefix = null;
-//        String param = null;
-//        ServiceHandler<String, Integer> serviceHandler = new ServiceHandler<String, Integer>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public Integer handle(String s) {
-//                return null;
-//            }
-//        };
-//
-//        Result<Integer> expectedResult = null;
-//        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-//        Assert.assertTrue(!expectedResult.isSuccess());
-//        Assert.assertEquals(expectedResult.getMessage(), checkParamFailedErrorMsg);
-//
-//        serviceHandler = new ServiceHandler<String, Integer>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return true;
-//            }
-//
-//            @Override
-//            public Integer handle(String s) {
-//                return 1;
-//            }
-//        };
-//
-//        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-//        Assert.assertTrue(expectedResult.isSuccess());
-//        Assert.assertEquals(expectedResult.getData(), new Integer(1));
-//    }
-//
-//    @Test
-//    public void testCaseForValidLogger() {
-//
-//        AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
-//            @Override
-//            public Logger getLogger() {
-//                return LoggerFactory.getLogger(AbstractServiceHandleTemplateTest.class);
-//            }
-//        };
-//
-//        String actualMessagePrefix = null;
-//        String param = null;
-//        ServiceHandler<String, Integer> serviceHandler = new ServiceHandler<String, Integer>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public Integer handle(String s) {
-//                return null;
-//            }
-//        };
-//
-//        Result<Integer> expectedResult = null;
-//        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-//        Assert.assertTrue(!expectedResult.isSuccess());
-//        Assert.assertEquals(expectedResult.getMessage(), checkParamFailedErrorMsg);
-//
-//        serviceHandler = new ServiceHandler<String, Integer>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return true;
-//            }
-//
-//            @Override
-//            public Integer handle(String s) {
-//                return 1;
-//            }
-//        };
-//
-//        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-//        Assert.assertTrue(expectedResult.isSuccess());
-//        Assert.assertEquals(expectedResult.getData(), new Integer(1));
-//    }
-//
-//    @Test
-//    public void testCaseForCanRethrowException() {
-//
-//        AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
-//            @Override
-//            public Logger getLogger() {
-//                return LoggerFactory.getLogger(AbstractServiceHandleTemplateTest.class);
-//            }
-//
-//            @Override
-//            protected boolean canRethrowException() {
-//                return true;
-//            }
-//        };
-//
-//        String actualMessagePrefix = null;
-//        String param = null;
-//        ServiceHandler<String, Integer> serviceHandler = new ServiceHandler<String, Integer>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public Integer handle(String s) {
-//                return null;
-//            }
-//        };
-//
-//        boolean expectedIsSuccess = false;
-//        Result<Integer> expectedResult = null;
-//        try {
-//            expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-//        } catch (AppException e) {
-//            String msg = e.getMessage();
-//            if (checkParamFailedErrorMsg.equals(msg)) {
-//                expectedIsSuccess = true;
-//            }
-//        }
-//        Assert.assertTrue(expectedIsSuccess);
-//        expectedIsSuccess = false;
-//        Assert.assertNull(expectedResult);
-//
-//        serviceHandler = new ServiceHandler<String, Integer>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return true;
-//            }
-//
-//            @Override
-//            public Integer handle(String s) {
-//                return 1;
-//            }
-//        };
-//        expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-//        Assert.assertTrue(expectedResult.isSuccess());
-//        Assert.assertEquals(expectedResult.getData(), new Integer(1));
-//        expectedResult = null;
-//
-//        serviceHandler = new ServiceHandler<String, Integer>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return true;
-//            }
-//
-//            @Override
-//            public Integer handle(String s) {
-//                throw new RuntimeException("xx");
-//            }
-//        };
-//        try {
-//            expectedResult = serviceHandleTemplate.handle(actualMessagePrefix, param, serviceHandler);
-//        } catch (AppException e) {
-//            if ("xx".equals(e.getMessage())) {
-//                expectedIsSuccess = true;
-//            }
-//        }
-//        Assert.assertTrue(expectedIsSuccess);
-//        Assert.assertNull(expectedResult);
-//    }
-//
-//    @Test
-//    public void testCaseForErrorCode() {
-//
-//        String handlerParam = "hello";
-//        Object handlerResult = "world";
-//        AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
-//
-//            @Override
-//            public Logger getLogger() {
-//                return null;
-//            }
-//        };
-//        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
-//
-//            @Override
-//            public boolean checkParams(String s) {
-//                throw new AppServiceException(ServiceErrorCode.INVALID_PARAM);
-//            }
-//
-//            @Override
-//            public Object handle(String s) {
-//                return handlerResult;
-//            }
-//        };
-//        String customizedErrorMsg = "XX参数未无效";
-//        Result<Object> result = serviceHandleTemplate.handle(handlerParam, serviceHandler);
-//        Assert.assertEquals(result.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
-//        Assert.assertEquals(result.getMessage(), ServiceErrorCode.INVALID_PARAM.getDescription());
-//
-//        serviceHandler = new ServiceHandler<String, Object>() {
-//
-//            @Override
-//            public boolean checkParams(String s) {
-//                throw new AppServiceException(ServiceErrorCode.INVALID_PARAM, customizedErrorMsg);
-//            }
-//
-//            @Override
-//            public Object handle(String s) {
-//                return handlerResult;
-//            }
-//        };
-//        result = serviceHandleTemplate.handle(handlerParam, serviceHandler);
-//        Assert.assertEquals(result.getCode(), ServiceErrorCode.INVALID_PARAM.getCode());
-//        Assert.assertEquals(result.getMessage(), customizedErrorMsg);
-//
-//        serviceHandler = new ServiceHandler<String, Object>() {
-//
-//            @Override
-//            public boolean checkParams(String s) {
-//                throw new AppException(ServiceErrorCode.INVALID_PARAM);
-//            }
-//
-//            @Override
-//            public Object handle(String s) {
-//                return handlerResult;
-//            }
-//        };
-//        result = serviceHandleTemplate.handle(handlerParam, serviceHandler);
-//        Assert.assertEquals(result.getCode(), ServiceErrorCode.UNKOWN.getCode());
-//        Assert.assertEquals(result.getMessage(), ServiceErrorCode.UNKOWN.getDescription());
-//    }
-//
-//    @Test
-//    public void testCaseForPrintErrorLog() {
-//        String handlerParam = "hello";
-//        AbstractServiceHandleTemplate serviceHandleTemplate = new AbstractServiceHandleTemplate() {
-//            @Override
-//            public Logger getLogger() {
-//                return LoggerFactory.getLogger(AbstractServiceHandleTemplateTest.class);
-//            }
-//        };
-//        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                throw new AppException();
-//            }
-//
-//            @Override
-//            public Object handle(String s) {
-//                return null;
-//            }
-//        };
-//
-//        serviceHandleTemplate.handle(handlerParam, serviceHandler);
-//
-//        serviceHandler = new ServiceHandler<String, Object>() {
-//            @Override
-//            public boolean checkParams(String s) {
-//                return false;
-//            }
-//
-//            @Override
-//            public Object handle(String s) {
-//                return null;
-//            }
-//        };
-//
-//        serviceHandleTemplate.handle(handlerParam, serviceHandler);
-//    }
-//}
-//
-//
-//
+package org.walkerljl.toolkit.template.handle.service;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.walkerljl.toolkit.logging.Logger;
+import org.walkerljl.toolkit.logging.LoggerFactory;
+import org.walkerljl.toolkit.standard.Result;
+import org.walkerljl.toolkit.standard.exception.AppRpcException;
+import org.walkerljl.toolkit.standard.exception.AppServiceException;
+import org.walkerljl.toolkit.template.handle.rpc.RpcErrorCode;
+import org.walkerljl.toolkit.template.handle.rpc.RpcHandleTemplate;
+import org.walkerljl.toolkit.template.log.InvocationInfo;
+
+/**
+ * AbstractServiceHandleTemplateTest
+ *
+ * @author xingxun
+ */
+public class AbstractServiceHandleTemplateTest {
+
+    private AbstractServiceHandleTemplate serviceHandleTemplate = new DefaultServiceHandleTemplate();
+    private AbstractServiceHandleTemplate canRethrowExceptionServiceHandleTemplate = new CanRethrowExceptionServiceHandleTemplate();
+
+    @Test
+    public void handleForInvalidParam() {
+        InvocationInfo<String, Object> invocationInfo = null;
+        ServiceHandler<String, Object> serviceHandler = null;
+        Result<Object> actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertFalse(actual.isSuccess());
+        Assert.assertEquals(actual.getCode(), RpcErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(actual.getMessage(), RpcErrorCode.INVALID_PARAM.getDescription());
+
+        invocationInfo = new InvocationInfo<>(getClass(), "handle", "testParam");
+        actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertFalse(actual.isSuccess());
+        Assert.assertEquals(actual.getCode(), RpcErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(actual.getMessage(), RpcErrorCode.INVALID_PARAM.getDescription());
+
+        serviceHandler = new DefaultServiceHandler();
+        actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertTrue(actual.isSuccess());
+    }
+
+    @Test
+    public void handleForInvalidBizParam() {
+        InvocationInfo<String, Object> invocationInfo =
+                new InvocationInfo<>(getClass(), "handle", "testParam");
+        ServiceHandler<String, Object> handler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return false;
+            }
+
+            @Override
+            public Object handle(String s) {
+                return null;
+            }
+        };
+
+        Result<Object> actual = serviceHandleTemplate.handle(invocationInfo, handler);
+        Assert.assertFalse(actual.isSuccess());
+        Assert.assertEquals(actual.getCode(), RpcErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(actual.getMessage(), RpcErrorCode.INVALID_PARAM.getDescription());
+    }
+
+    @Test
+    public void handleForNormal() {
+        InvocationInfo<String, Object> invocationInfo =
+                new InvocationInfo<>(getClass(), "handle", "testParam");
+        final Object expected = "expected";
+
+        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return true;
+            }
+
+            @Override
+            public Object handle(String s) {
+                return expected;
+            }
+        };
+        Result<Object> actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertTrue(actual.isSuccess());
+        Assert.assertEquals(actual.getCode(), Result.DEFAULT_SUCCESS_CODE);
+        Assert.assertEquals(actual.getMessage(), Result.DEFAULT_SUCCESS_MESSAGE);
+        Assert.assertEquals(actual.getData(), expected);
+        Assert.assertEquals(actual, invocationInfo.getDirectResultData());
+    }
+
+    @Test
+    public void handleForBizHandleError() {
+        InvocationInfo<String, Object> invocationInfo =
+                new InvocationInfo<>(getClass(), "handle", "testParam");
+
+        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return true;
+            }
+
+            @Override
+            public Object handle(String s) {
+                throw new RuntimeException("测试异常");
+            }
+        };
+        Result<Object> actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertFalse(actual.isSuccess());
+        Assert.assertEquals(actual.getCode(), ServiceErrorCode.UNKNOWN.getCode());
+        Assert.assertEquals(actual.getMessage(), ServiceErrorCode.UNKNOWN.getDescription());
+
+        serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return true;
+            }
+
+            @Override
+            public Object handle(String s) {
+                throw new AppServiceException("测试异常");
+            }
+        };
+        actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertFalse(actual.isSuccess());
+        Assert.assertEquals(actual.getCode(), ServiceErrorCode.UNKNOWN.getCode());
+        Assert.assertEquals(actual.getMessage(), ServiceErrorCode.UNKNOWN.getDescription());
+
+        serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return true;
+            }
+
+            @Override
+            public Object handle(String s) {
+                throw new AppServiceException(ServiceErrorCode.PERMISSION_DENIED);
+            }
+        };
+        actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertFalse(actual.isSuccess());
+        Assert.assertEquals(actual.getCode(), ServiceErrorCode.PERMISSION_DENIED.getCode());
+        Assert.assertEquals(actual.getMessage(), ServiceErrorCode.PERMISSION_DENIED.getDescription());
+    }
+
+    @Test
+    public void handleForInvalidParamAndCanRethrowException() {
+        InvocationInfo<String, Object> invocationInfo = null;
+        ServiceHandler<String, Object> serviceHandler = null;
+        boolean actual = false;
+        try {
+            canRethrowExceptionServiceHandleTemplate.handle(invocationInfo, serviceHandler);
+        } catch (AppServiceException e) {
+            actual = (e.getCode() == ServiceErrorCode.INVALID_PARAM
+                    && e.getMessage().equals(String.format("%s:%s",
+                    ServiceErrorCode.INVALID_PARAM.getDescription(), "invocationInfo")));
+        }
+        Assert.assertTrue(actual);
+        actual = false;
+
+        invocationInfo = new InvocationInfo<>(getClass(), "handle", "testParam");
+        try {
+            canRethrowExceptionServiceHandleTemplate.handle(invocationInfo, serviceHandler);
+        } catch (AppServiceException e) {
+            String errorMsg = e.getMessage();
+            actual = (e.getCode() == ServiceErrorCode.INVALID_PARAM
+                    && errorMsg.equals(String.format("%s:%s", RpcErrorCode.INVALID_PARAM.getDescription(), "handler")));
+        }
+        Assert.assertTrue(actual);
+
+        invocationInfo = new InvocationInfo<>(getClass(), "handle", "testParam");
+        serviceHandler = new DefaultServiceHandler();
+        canRethrowExceptionServiceHandleTemplate.handle(invocationInfo, serviceHandler);
+    }
+
+    @Test
+    public void handleForInvalidBizParamAndCanRethrowException() {
+        InvocationInfo<String, Object> invocationInfo =
+                new InvocationInfo<>(getClass(), "handle", "testParam");
+        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return false;
+            }
+
+            @Override
+            public Object handle(String s) {
+                return null;
+            }
+        };
+
+        boolean actual = false;
+        try {
+            canRethrowExceptionServiceHandleTemplate.handle(invocationInfo, serviceHandler);
+        } catch (AppServiceException e) {
+            String errorMsg = e.getMessage();
+            actual = (e.getCode() == ServiceErrorCode.INVALID_PARAM
+                    && errorMsg.equals(ServiceErrorCode.INVALID_PARAM.getDescription()));
+        }
+        Assert.assertTrue(actual);
+    }
+
+    @Test
+    public void handleForNormalAndCanRethrowException() {
+        InvocationInfo<String, Object> invocationInfo =
+                new InvocationInfo<>(getClass(), "handle", "testParam");
+        final Object expected = "expected";
+        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return true;
+            }
+
+            @Override
+            public Object handle(String s) {
+                return expected;
+            }
+        };
+        Result<Object> actual = canRethrowExceptionServiceHandleTemplate.handle(invocationInfo, serviceHandler);
+        Assert.assertTrue(actual.isSuccess());
+        Assert.assertEquals(actual.getData(), expected);
+    }
+
+    @Test
+    public void handleForBizHandleErrorAndCanRethrowException() {
+        InvocationInfo<String, Object> invocationInfo =
+                new InvocationInfo<>(getClass(), "handle", "testParam");
+        ServiceHandler<String, Object> serviceHandler = new ServiceHandler<String, Object>() {
+            @Override
+            public boolean checkParams(String s) {
+                return true;
+            }
+
+            @Override
+            public Object handle(String s) {
+                throw new RuntimeException("测试异常");
+            }
+        };
+        boolean actual = false;
+        try {
+            canRethrowExceptionServiceHandleTemplate.handle(invocationInfo, serviceHandler);
+        } catch (AppServiceException e) {
+            String errorMsg = e.getMessage();
+            actual = errorMsg.equals("测试异常");
+        }
+        Assert.assertTrue(actual);
+    }
+}
+
+class DefaultServiceHandleTemplate extends AbstractServiceHandleTemplate {
+
+    /** Digest logger*/
+    private static final Logger DIGEST_LOGGER = LoggerFactory.getLogger("SERVICE-DIGEST");
+    /** Detail logger*/
+    private static final Logger DETAIL_LOGGER = LoggerFactory.getLogger("SERVICE-DETAIL");
+    /** Error logger*/
+    private static final Logger ERROR_LOGGER  = LoggerFactory.getLogger(ServiceHandleTemplate.class);
+
+    @Override
+    protected Logger getDigestLogger() {
+        return DIGEST_LOGGER;
+    }
+
+    @Override
+    protected Logger getDetailLogger() {
+        return DETAIL_LOGGER;
+    }
+
+    @Override
+    protected Logger getErrorLogger() {
+        return ERROR_LOGGER;
+    }
+}
+
+class CanRethrowExceptionServiceHandleTemplate extends AbstractServiceHandleTemplate {
+
+    /** Digest logger*/
+    private static final Logger DIGEST_LOGGER = LoggerFactory.getLogger("SERVICE-DIGEST");
+    /** Detail logger*/
+    private static final Logger DETAIL_LOGGER = LoggerFactory.getLogger("SERVICE-DETAIL");
+    /** Error logger*/
+    private static final Logger ERROR_LOGGER  = LoggerFactory.getLogger(ServiceHandleTemplate.class);
+
+    @Override
+    protected Logger getDigestLogger() {
+        return DIGEST_LOGGER;
+    }
+
+    @Override
+    protected Logger getDetailLogger() {
+        return DETAIL_LOGGER;
+    }
+
+    @Override
+    protected Logger getErrorLogger() {
+        return ERROR_LOGGER;
+    }
+
+    @Override
+    protected boolean canRethrowException() {
+        return true;
+    }
+}
+
+class DefaultServiceHandler implements ServiceHandler<String, Object> {
+
+    @Override
+    public boolean checkParams(String s) {
+        return true;
+    }
+
+    @Override
+    public Object handle(String s) {
+
+        return null;
+    }
+}
+
+
+
+

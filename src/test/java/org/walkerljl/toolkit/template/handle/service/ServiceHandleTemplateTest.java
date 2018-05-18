@@ -11,11 +11,14 @@ public class ServiceHandleTemplateTest {
 
     @Test
     public void test() {
-        HelloFacade helloFacade = new HelloFacadeImpl();
-        helloFacade.say("world");
-        helloFacade.doSomething("127.0.0.1", "haha");
 
-        helloFacade.say(null);
-        helloFacade.doSomething(null, null);
+        ServiceHandleTemplate serviceHandleTemplate = ServiceHandleTemplate.getInstance();
+
+        //HelloFacade helloFacade = new HelloFacadeImpl();
+        //helloFacade.say("world");
+        //helloFacade.doSomething("127.0.0.1", "haha");
+        //
+        //helloFacade.say(null);
+        //helloFacade.doSomething(null, null);
     }
 }
