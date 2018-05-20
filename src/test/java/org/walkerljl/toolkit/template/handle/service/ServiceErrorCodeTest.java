@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import org.walkerljl.toolkit.template.BaseUnitTest;
 
 /**
+ * ServiceErrorCodeTest
  *
  * @author xingxun
  */

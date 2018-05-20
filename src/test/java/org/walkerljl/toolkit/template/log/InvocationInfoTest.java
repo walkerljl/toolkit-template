@@ -2,7 +2,6 @@ package org.walkerljl.toolkit.template.log;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.walkerljl.toolkit.standard.exception.AppException;
 
 /**
  * InvocationInfoTest
@@ -16,7 +15,7 @@ public class InvocationInfoTest {
     private Object[]  params           = new Object[] {"1"};
     private String    directResultData = "directResultData";
     private String    resultData       = "resultData";
-    private Throwable throwable        = new AppException();
+    private Throwable throwable        = new RuntimeException();
 
     @Test
     public void constructor() {
