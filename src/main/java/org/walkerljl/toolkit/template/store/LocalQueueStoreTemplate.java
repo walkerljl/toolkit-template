@@ -2,12 +2,12 @@ package org.walkerljl.toolkit.template.store;
 
 import java.util.concurrent.BlockingQueue;
 
-import org.walkerljl.toolkit.standard.Machine;
-import org.walkerljl.toolkit.standard.abstracts.AbstractMachine;
 import org.walkerljl.toolkit.standard.exception.AppException;
-import org.walkerljl.toolkit.standard.exception.machine.CannotStartMachineException;
-import org.walkerljl.toolkit.standard.exception.machine.CannotStopMachineException;
-import org.walkerljl.toolkit.standard.exception.machine.MachineException;
+import org.walkerljl.toolkit.standard.machine.Machine;
+import org.walkerljl.toolkit.standard.machine.abstracts.AbstractMachine;
+import org.walkerljl.toolkit.standard.machine.exception.CannotStartMachineException;
+import org.walkerljl.toolkit.standard.machine.exception.CannotStopMachineException;
+import org.walkerljl.toolkit.standard.machine.exception.MachineException;
 
 /**
  * LocalQueueStoreTemplate

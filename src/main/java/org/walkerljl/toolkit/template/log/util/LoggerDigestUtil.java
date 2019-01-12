@@ -1,6 +1,8 @@
-package org.walkerljl.toolkit.template.log;
+package org.walkerljl.toolkit.template.log.util;
 
-import org.walkerljl.toolkit.logging.Logger;
+import org.walkerljl.toolkit.template.log.model.InvocationInfo;
+import org.walkerljl.toolkit.template.log.Logger;
+import org.walkerljl.toolkit.template.log.abstracts.AbstractLogUtil;
 
 /**
  * Logger digest util

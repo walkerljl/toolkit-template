@@ -4,7 +4,7 @@ import org.walkerljl.toolkit.standard.Result;
 import org.walkerljl.toolkit.template.handle.rpc.RpcAssertUtil;
 import org.walkerljl.toolkit.template.handle.rpc.RpcHandleTemplate;
 import org.walkerljl.toolkit.template.handle.rpc.RpcHandler;
-import org.walkerljl.toolkit.template.log.InvocationInfo;
+import org.walkerljl.toolkit.template.log.model.InvocationInfo;
 import org.walkerljl.toolkit.template.service.facade.HelloFacade;
 import org.walkerljl.toolkit.template.service.integration.HelloFacadeClient;
 

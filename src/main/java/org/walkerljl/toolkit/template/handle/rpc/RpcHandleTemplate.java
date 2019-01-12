@@ -1,7 +1,7 @@
 package org.walkerljl.toolkit.template.handle.rpc;
 
-import org.walkerljl.toolkit.logging.Logger;
-import org.walkerljl.toolkit.logging.LoggerFactory;
+import org.walkerljl.toolkit.template.log.Logger;
+import org.walkerljl.toolkit.template.log.LoggerFactory;
 
 /**
  * Rpc处理模板

@@ -1,9 +1,9 @@
-package org.walkerljl.toolkit.template.log;
+package org.walkerljl.toolkit.template.log.util;
 
 import java.text.MessageFormat;
 import java.util.UUID;
 
-import org.walkerljl.toolkit.logging.Logger;
+import org.walkerljl.toolkit.template.log.Logger;
 
 /**
  * LoggerUtil

@@ -2,6 +2,7 @@ package org.walkerljl.toolkit.template.log;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.walkerljl.toolkit.template.log.model.InvocationInfo;
 
 /**
  * InvocationInfoTest

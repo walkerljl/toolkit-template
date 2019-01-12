@@ -6,7 +6,7 @@ import org.walkerljl.toolkit.standard.Result;
 import org.walkerljl.toolkit.template.handle.service.ServiceAssertUtil;
 import org.walkerljl.toolkit.template.handle.service.ServiceHandleTemplate;
 import org.walkerljl.toolkit.template.handle.service.ServiceHandler;
-import org.walkerljl.toolkit.template.log.InvocationInfo;
+import org.walkerljl.toolkit.template.log.model.InvocationInfo;
 import org.walkerljl.toolkit.template.service.facade.HelloFacade;
 
 /**

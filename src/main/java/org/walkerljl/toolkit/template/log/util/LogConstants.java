@@ -1,4 +1,4 @@
-package org.walkerljl.toolkit.template.log;
+package org.walkerljl.toolkit.template.log.util;
 
 /**
  * Log constants

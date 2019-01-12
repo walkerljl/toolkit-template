@@ -1,6 +1,8 @@
-package org.walkerljl.toolkit.template.log;
+package org.walkerljl.toolkit.template.log.util;
 
-import org.walkerljl.toolkit.logging.Logger;
+import org.walkerljl.toolkit.template.log.model.InvocationInfo;
+import org.walkerljl.toolkit.template.log.Logger;
+import org.walkerljl.toolkit.template.log.abstracts.AbstractLogUtil;
 
 /**
  * Logger detail util
@@ -53,10 +55,10 @@ public class LoggerDetailUtil extends AbstractLogUtil {
         sb.append(getString(invocationInfo.isSuccess()));
         sb.append(LOG_PARAM_SUFFIX);
 
-        sb.append(LOG_PARAM_PREFIX).append(String.valueOf(invocationInfo.getParam()));
+        sb.append(LOG_PARAM_PREFIX).append(toJSONString(invocationInfo.getParam()));
 
         sb.append(LOG_PARAM_SUFFIX).append(LOG_PARAM_PREFIX);
-        sb.append(null == invocationInfo.getDirectResultData() ? LOG_DEFAULT : invocationInfo.getDirectResultData()).append(
+        sb.append(null == invocationInfo.getDirectResultData() ? LOG_DEFAULT : toJSONString(invocationInfo.getDirectResultData())).append(
                 LOG_PARAM_SUFFIX);
         //异常
         sb.append(LOG_PARAM_PREFIX).append(THROWABLE);

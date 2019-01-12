@@ -1,12 +1,13 @@
 package org.walkerljl.toolkit.template.handle.service;
 
-import org.walkerljl.toolkit.logging.Logger;
-import org.walkerljl.toolkit.logging.LoggerFactory;
+import org.walkerljl.toolkit.standard.Result;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
 import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 import org.walkerljl.toolkit.template.handle.AbstractHandleTemplate;
-import org.walkerljl.toolkit.template.log.InvocationInfo;
-import org.walkerljl.toolkit.template.log.LoggerUtil;
+import org.walkerljl.toolkit.template.log.model.InvocationInfo;
+import org.walkerljl.toolkit.template.log.Logger;
+import org.walkerljl.toolkit.template.log.LoggerFactory;
+import org.walkerljl.toolkit.template.log.util.LoggerUtil;
 
 /**
  * 抽象的业务处理模板
@@ -26,9 +27,9 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
      * @param handler 业务处理器
      * @return
      */
-    public <PARAM, RESULT> org.walkerljl.toolkit.standard.Result<RESULT> handle(InvocationInfo<PARAM, RESULT> invocationInfo,
+    public <PARAM, RESULT> Result<RESULT> handle(InvocationInfo<PARAM, RESULT> invocationInfo,
                                                                                 ServiceHandler<PARAM, RESULT> handler) {
-        org.walkerljl.toolkit.standard.Result<RESULT> result = null;
+        Result<RESULT> result = null;
         try {
             // 参数校验
             ServiceAssertUtil.assertParam(invocationInfo != null, "invocationInfo");
@@ -41,7 +42,7 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
             // 业务执行
             RESULT originResult = handler.handle(invocationInfo.getParam());
             // 构建Success消息
-            result = org.walkerljl.toolkit.standard.Result.success(originResult);
+            result = Result.success(originResult);
 
             // 标注是否成功
             invocationInfo.markSuccess(result, (result == null ? null : result.getData()));
@@ -53,9 +54,9 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
             if (!canRethrowException()) {
                 ErrorCode errorCode = (e instanceof AppServiceException) ? ((AppServiceException) e).getCode() : null;
                 if (errorCode != null) {
-                    result = org.walkerljl.toolkit.standard.Result.failure(errorCode.getCode(), errorCode.getDescription());
+                    result = Result.failure(errorCode.getCode(), errorCode.getDescription());
                 } else {
-                    result = org.walkerljl.toolkit.standard.Result.failure(ServiceErrorCode.UNKNOWN.getCode(),
+                    result = Result.failure(ServiceErrorCode.UNKNOWN.getCode(),
                             ServiceErrorCode.UNKNOWN.getDescription());
                     result.setRemark(e.getMessage());
                 }

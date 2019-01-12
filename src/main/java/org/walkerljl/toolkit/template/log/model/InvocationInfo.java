@@ -1,4 +1,4 @@
-package org.walkerljl.toolkit.template.log;
+package org.walkerljl.toolkit.template.log.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,7 +85,7 @@ public class InvocationInfo<PARAM, RESULT> extends BaseEntity {
      * @param param 参数
      */
     public InvocationInfo(Class<?> objectClass, String methodName, PARAM param) {
-        this(objectClass, methodName, param, null, null, false);
+        this(objectClass, methodName, param, null, null, true);
     }
 
     /**
