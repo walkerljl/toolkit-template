@@ -21,7 +21,7 @@ public abstract class RecursiveQueryTemplate<PARAM, RESULT> {
         if (param == null) {
             return null;
         }
-        List<RESULT> resultList = new ArrayList<RESULT>();
+        List<RESULT> resultList = new ArrayList<>();
         do {
             List<RESULT> partResultList = query0(param);
             if (isEmpty(partResultList)) {

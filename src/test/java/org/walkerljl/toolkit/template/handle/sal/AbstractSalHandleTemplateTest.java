@@ -1,8 +1,8 @@
-package org.walkerljl.toolkit.template.handle.rpc;
+package org.walkerljl.toolkit.template.handle.sal;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.walkerljl.toolkit.standard.exception.AppRpcException;
+
 import org.walkerljl.toolkit.template.log.model.InvocationInfo;
 import org.walkerljl.toolkit.template.log.Logger;
 import org.walkerljl.toolkit.template.log.LoggerFactory;
@@ -12,21 +12,21 @@ import org.walkerljl.toolkit.template.log.LoggerFactory;
  *
  * @author xingxun
  */
-public class AbstractRpcHandleTemplateTest {
+public class AbstractSalHandleTemplateTest {
 
-    private AbstractRpcHandleTemplate rpcHandleTemplate = new DefaultRpcHandleTemplate();
+    private AbstractSalHandleTemplate rpcHandleTemplate = new DefaultSalHandleTemplate();
 
     @Test
     public void handleForInvalidParam() {
         InvocationInfo<String, Object> invocationInfo = null;
-        RpcHandler<String, Object> handler = null;
+        SalHandler<String, Object> handler = null;
         boolean actual = false;
         try {
             rpcHandleTemplate.handle(invocationInfo, handler);
-        } catch (AppRpcException e) {
-            actual = (e.getCode() == RpcErrorCode.INVALID_PARAM
+        } catch (AppSalException e) {
+            actual = (e.getCode() == SalErrorCode.INVALID_PARAM
                     && e.getMessage().equals(String.format("%s:%s",
-                    RpcErrorCode.INVALID_PARAM.getDescription(), "invocationInfo")));
+                    SalErrorCode.INVALID_PARAM.getDescription(), "invocationInfo")));
         }
         Assert.assertTrue(actual);
         actual = false;
@@ -34,15 +34,15 @@ public class AbstractRpcHandleTemplateTest {
         invocationInfo = new InvocationInfo<>(getClass(), "handle", "testParam");
         try {
             rpcHandleTemplate.handle(invocationInfo, handler);
-        } catch (AppRpcException e) {
+        } catch (AppSalException e) {
             String errorMsg = e.getMessage();
-            actual = (e.getCode() == RpcErrorCode.INVALID_PARAM
-                    && errorMsg.equals(String.format("%s:%s", RpcErrorCode.INVALID_PARAM.getDescription(), "handler")));
+            actual = (e.getCode() == SalErrorCode.INVALID_PARAM
+                    && errorMsg.equals(String.format("%s:%s", SalErrorCode.INVALID_PARAM.getDescription(), "handler")));
         }
         Assert.assertTrue(actual);
 
         invocationInfo = new InvocationInfo<>(getClass(), "handle", "testParam");
-        handler = new DefaultRpcHandler(invocationInfo);
+        handler = new DefaultSalHandler(invocationInfo);
         rpcHandleTemplate.handle(invocationInfo, handler);
     }
 
@@ -50,7 +50,7 @@ public class AbstractRpcHandleTemplateTest {
     public void handleForInvalidBizParam() {
         InvocationInfo<String, Object> invocationInfo =
                 new InvocationInfo<>(getClass(), "handle", "testParam");
-        RpcHandler<String, Object> rpcHandler = new RpcHandler<String, Object>() {
+        SalHandler<String, Object> rpcHandler = new SalHandler<String, Object>() {
             @Override
             public boolean checkParams(String s) {
                 return false;
@@ -65,10 +65,10 @@ public class AbstractRpcHandleTemplateTest {
         boolean actual = false;
         try {
             rpcHandleTemplate.handle(invocationInfo, rpcHandler);
-        } catch (AppRpcException e) {
+        } catch (AppSalException e) {
             String errorMsg = e.getMessage();
-            actual = (e.getCode() == RpcErrorCode.INVALID_PARAM
-                    && errorMsg.equals(RpcErrorCode.INVALID_PARAM.getDescription()));
+            actual = (e.getCode() == SalErrorCode.INVALID_PARAM
+                    && errorMsg.equals(SalErrorCode.INVALID_PARAM.getDescription()));
         }
         Assert.assertTrue(actual);
     }
@@ -78,7 +78,7 @@ public class AbstractRpcHandleTemplateTest {
         InvocationInfo<String, Object> invocationInfo =
                 new InvocationInfo<>(getClass(), "handle", "testParam");
         final Object expected = "expected";
-        RpcHandler<String, Object> rpcHandler = new RpcHandler<String, Object>() {
+        SalHandler<String, Object> rpcHandler = new SalHandler<String, Object>() {
             @Override
             public boolean checkParams(String s) {
                 return true;
@@ -103,7 +103,7 @@ public class AbstractRpcHandleTemplateTest {
         InvocationInfo<String, Object> invocationInfo =
                 new InvocationInfo<>(getClass(), "handle", "testParam");
         final Object expected = "expected";
-        RpcHandler<String, Object> rpcHandler = new RpcHandler<String, Object>() {
+        SalHandler<String, Object> rpcHandler = new SalHandler<String, Object>() {
             @Override
             public boolean checkParams(String s) {
                 return true;
@@ -122,14 +122,14 @@ public class AbstractRpcHandleTemplateTest {
         boolean actual = false;
         try {
             rpcHandleTemplate.handle(invocationInfo, rpcHandler);
-        } catch (AppRpcException e) {
+        } catch (AppSalException e) {
             String errorMsg = e.getMessage();
             actual = errorMsg.equals(invocationInfo.getTraceInfo());
         }
         Assert.assertTrue(actual);
         actual = false;
 
-        rpcHandler = new RpcHandler<String, Object>() {
+        rpcHandler = new SalHandler<String, Object>() {
             @Override
             public boolean checkParams(String s) {
                 return true;
@@ -143,7 +143,7 @@ public class AbstractRpcHandleTemplateTest {
         };
         try {
             rpcHandleTemplate.handle(invocationInfo, rpcHandler);
-        } catch (AppRpcException e) {
+        } catch (AppSalException e) {
             String errorMsg = e.getMessage();
             actual = errorMsg.equals("测试异常");
         }
@@ -151,14 +151,14 @@ public class AbstractRpcHandleTemplateTest {
     }
 }
 
-class DefaultRpcHandleTemplate extends AbstractRpcHandleTemplate {
+class DefaultSalHandleTemplate extends AbstractSalHandleTemplate {
 
     /** Digest logger*/
     private static final Logger DIGEST_LOGGER = LoggerFactory.getLogger("INTEGRATION-DIGEST");
     /** Detail logger*/
     private static final Logger DETAIL_LOGGER = LoggerFactory.getLogger("INTEGRATION-DETAIL");
     /** Error logger*/
-    private static final Logger ERROR_LOGGER  = LoggerFactory.getLogger(RpcHandleTemplate.class);
+    private static final Logger ERROR_LOGGER  = LoggerFactory.getLogger(SalHandleTemplate.class);
 
     @Override
     protected Logger getDigestLogger() {
@@ -176,11 +176,11 @@ class DefaultRpcHandleTemplate extends AbstractRpcHandleTemplate {
     }
 }
 
-class DefaultRpcHandler implements RpcHandler<String, Object> {
+class DefaultSalHandler implements SalHandler<String, Object> {
 
     private InvocationInfo<String, Object> invocationInfo;
 
-    public DefaultRpcHandler(InvocationInfo<String, Object> invocationInfo) {
+    public DefaultSalHandler(InvocationInfo<String, Object> invocationInfo) {
         this.invocationInfo = invocationInfo;
     }
 

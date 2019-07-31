@@ -1,5 +1,6 @@
 package org.walkerljl.toolkit.template.handle.service;
 
+import org.walkerljl.toolkit.standard.enums.IEnum;
 import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 
 /**
@@ -58,5 +59,15 @@ public enum ServiceErrorCode implements ErrorCode {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public ErrorCode getEnumObject(String code) {
+        for (ErrorCode ele : values()) {
+            if (ele.getCode().equalsIgnoreCase(code)) {
+                return ele;
+            }
+        }
+        return null;
     }
 }

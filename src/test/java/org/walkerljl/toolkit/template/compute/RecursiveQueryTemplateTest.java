@@ -1,4 +1,4 @@
-package org.walkerljl.toolkit.template;
+package org.walkerljl.toolkit.template.compute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.walkerljl.toolkit.template.compute.RecursiveQueryTemplate;
 
 /**
  * RecursiveQueryTemplateTest
@@ -58,7 +57,7 @@ public class RecursiveQueryTemplateTest {
             @Override
             protected List<PagingQueryResult> query0(PagingQueryParam pagingQueryParam) {
                 counter.incrementAndGet();
-                return new ArrayList<PagingQueryResult>();
+                return new ArrayList<>();
             }
         }.query(new PagingQueryParam());
 
@@ -66,7 +65,7 @@ public class RecursiveQueryTemplateTest {
     }
 
     @Test
-    public void test() {
+    public void query() {
         PagingQueryParam param = new PagingQueryParam();
         param.setCurrentPage(1);
         param.setPageSize(2);

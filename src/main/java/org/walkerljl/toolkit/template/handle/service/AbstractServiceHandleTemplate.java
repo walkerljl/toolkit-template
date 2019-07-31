@@ -58,8 +58,8 @@ public abstract class AbstractServiceHandleTemplate extends AbstractHandleTempla
                 } else {
                     result = Result.failure(ServiceErrorCode.UNKNOWN.getCode(),
                             ServiceErrorCode.UNKNOWN.getDescription());
-                    result.setRemark(e.getMessage());
                 }
+                result.setRemark(e.getMessage());
             }
         } finally {
             try {

@@ -3,6 +3,7 @@ package org.walkerljl.toolkit.template.handle;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.walkerljl.toolkit.standard.exception.AppException;
+import org.walkerljl.toolkit.template.BaseUnitTest;
 import org.walkerljl.toolkit.template.handle.service.ServiceErrorCode;
 import org.walkerljl.toolkit.template.log.model.InvocationInfo;
 import org.walkerljl.toolkit.template.log.Logger;
@@ -11,7 +12,7 @@ import org.walkerljl.toolkit.template.log.Logger;
  *
  * @author xingxun
  */
-public class AbstractHandleTemplateTest {
+public class AbstractHandleTemplateTest extends BaseUnitTest {
 
     private AbstractHandleTemplate abstractHandleTemplate = new DefaultHandleTemplate();
 

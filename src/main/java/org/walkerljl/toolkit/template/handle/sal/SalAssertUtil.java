@@ -1,14 +1,14 @@
-package org.walkerljl.toolkit.template.handle.rpc;
+package org.walkerljl.toolkit.template.handle.sal;
 
 import org.walkerljl.toolkit.standard.exception.AppRpcException;
 import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 
 /**
- * RpcAssertUtil
+ * SalAssertUtil
  *
  * @author xingxun
  */
-public class RpcAssertUtil {
+public class SalAssertUtil {
 
     /**
      * 断言为真
@@ -18,7 +18,7 @@ public class RpcAssertUtil {
      */
     public static void assertTrue(boolean expression, String message) {
         if (!expression) {
-            throw new AppRpcException(message);
+            throw new AppSalException(message);
         }
     }
 
@@ -30,7 +30,7 @@ public class RpcAssertUtil {
      */
     public static void assertTrue(boolean expression, ErrorCode errorCode) {
         if (!expression) {
-            throw new AppRpcException(errorCode);
+            throw new AppSalException(errorCode);
         }
     }
 
@@ -43,7 +43,7 @@ public class RpcAssertUtil {
      */
     public static void assertTrue(boolean expression, ErrorCode errorCode, String message) {
         if (!expression) {
-            throw new AppRpcException(errorCode, message);
+            throw new AppSalException(errorCode, message);
         }
     }
 
@@ -54,7 +54,7 @@ public class RpcAssertUtil {
      * @param paramName 参数名称
      */
     public static void assertParam(boolean expression, String paramName) {
-        assertParam(expression, RpcErrorCode.INVALID_PARAM, paramName);
+        assertParam(expression, SalErrorCode.INVALID_PARAM, paramName);
     }
 
     /**
@@ -67,7 +67,7 @@ public class RpcAssertUtil {
     public static void assertParam(boolean expression, ErrorCode errorCode, String paramName) {
         if (!expression) {
             String message = String.format("%s:%s", errorCode.getDescription(), paramName);
-            throw new AppRpcException(errorCode, message);
+            throw new AppSalException(errorCode, message);
         }
     }
 }

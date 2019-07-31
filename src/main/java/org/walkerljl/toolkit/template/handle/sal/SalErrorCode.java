@@ -1,13 +1,14 @@
-package org.walkerljl.toolkit.template.handle.rpc;
+package org.walkerljl.toolkit.template.handle.sal;
 
+import org.walkerljl.toolkit.standard.enums.IEnum;
 import org.walkerljl.toolkit.standard.exception.code.ErrorCode;
 
 /**
- * RpcErrorCode
+ * SalErrorCode
  *
  * @author xingxun
  */
-public enum RpcErrorCode implements ErrorCode {
+public enum SalErrorCode implements ErrorCode {
 
     /**
      * 网络繁忙，请稍后再试。
@@ -27,7 +28,7 @@ public enum RpcErrorCode implements ErrorCode {
      * @param code 编码
      * @param description 描述
      */
-    RpcErrorCode(String code, String description) {
+    SalErrorCode(String code, String description) {
         this.code = code;
         this.description = description;
     }
@@ -45,5 +46,15 @@ public enum RpcErrorCode implements ErrorCode {
     @Override
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public IEnum getEnumObject(String code) {
+        for (IEnum ele : values()) {
+            if (ele.getCode().equalsIgnoreCase(code)) {
+                return ele;
+            }
+        }
+        return null;
     }
 }

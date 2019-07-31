@@ -4,7 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.walkerljl.toolkit.standard.Result;
 import org.walkerljl.toolkit.standard.exception.AppServiceException;
-import org.walkerljl.toolkit.template.handle.rpc.RpcErrorCode;
+import org.walkerljl.toolkit.template.handle.sal.SalErrorCode;
 import org.walkerljl.toolkit.template.log.model.InvocationInfo;
 import org.walkerljl.toolkit.template.log.Logger;
 import org.walkerljl.toolkit.template.log.LoggerFactory;
@@ -25,14 +25,14 @@ public class AbstractServiceHandleTemplateTest {
         ServiceHandler<String, Object> serviceHandler = null;
         Result<Object> actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
         Assert.assertFalse(actual.isSuccess());
-        Assert.assertEquals(actual.getCode(), RpcErrorCode.INVALID_PARAM.getCode());
-        Assert.assertEquals(actual.getMessage(), RpcErrorCode.INVALID_PARAM.getDescription());
+        Assert.assertEquals(actual.getCode(), SalErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(actual.getMessage(), SalErrorCode.INVALID_PARAM.getDescription());
 
         invocationInfo = new InvocationInfo<>(getClass(), "handle", "testParam");
         actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
         Assert.assertFalse(actual.isSuccess());
-        Assert.assertEquals(actual.getCode(), RpcErrorCode.INVALID_PARAM.getCode());
-        Assert.assertEquals(actual.getMessage(), RpcErrorCode.INVALID_PARAM.getDescription());
+        Assert.assertEquals(actual.getCode(), SalErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(actual.getMessage(), SalErrorCode.INVALID_PARAM.getDescription());
 
         serviceHandler = new DefaultServiceHandler();
         actual = serviceHandleTemplate.handle(invocationInfo, serviceHandler);
@@ -57,8 +57,8 @@ public class AbstractServiceHandleTemplateTest {
 
         Result<Object> actual = serviceHandleTemplate.handle(invocationInfo, handler);
         Assert.assertFalse(actual.isSuccess());
-        Assert.assertEquals(actual.getCode(), RpcErrorCode.INVALID_PARAM.getCode());
-        Assert.assertEquals(actual.getMessage(), RpcErrorCode.INVALID_PARAM.getDescription());
+        Assert.assertEquals(actual.getCode(), SalErrorCode.INVALID_PARAM.getCode());
+        Assert.assertEquals(actual.getMessage(), SalErrorCode.INVALID_PARAM.getDescription());
     }
 
     @Test
@@ -161,7 +161,7 @@ public class AbstractServiceHandleTemplateTest {
         } catch (AppServiceException e) {
             String errorMsg = e.getMessage();
             actual = (e.getCode() == ServiceErrorCode.INVALID_PARAM
-                    && errorMsg.equals(String.format("%s:%s", RpcErrorCode.INVALID_PARAM.getDescription(), "handler")));
+                    && errorMsg.equals(String.format("%s:%s", SalErrorCode.INVALID_PARAM.getDescription(), "handler")));
         }
         Assert.assertTrue(actual);
 

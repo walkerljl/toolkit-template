@@ -1,9 +1,9 @@
 package org.walkerljl.toolkit.template.service.integration.impl;
 
 import org.walkerljl.toolkit.standard.Result;
-import org.walkerljl.toolkit.template.handle.rpc.RpcAssertUtil;
-import org.walkerljl.toolkit.template.handle.rpc.RpcHandleTemplate;
-import org.walkerljl.toolkit.template.handle.rpc.RpcHandler;
+import org.walkerljl.toolkit.template.handle.sal.SalAssertUtil;
+import org.walkerljl.toolkit.template.handle.sal.SalHandleTemplate;
+import org.walkerljl.toolkit.template.handle.sal.SalHandler;
 import org.walkerljl.toolkit.template.log.model.InvocationInfo;
 import org.walkerljl.toolkit.template.service.facade.HelloFacade;
 import org.walkerljl.toolkit.template.service.integration.HelloFacadeClient;
@@ -20,10 +20,10 @@ public class HelloFacadeClientImpl implements HelloFacadeClient {
     @Override
     public String say(String content) {
         InvocationInfo<String, String> invocationInfo = new InvocationInfo<>(getClass(), "say", content);
-        return RpcHandleTemplate.getInstance().handle(invocationInfo, new RpcHandler<String, String>() {
+        return SalHandleTemplate.getInstance().handle(invocationInfo, new SalHandler<String, String>() {
             @Override
             public boolean checkParams(String content) {
-                RpcAssertUtil.assertParam(content != null, "content");
+                SalAssertUtil.assertParam(content != null, "content");
                 return true;
             }
 
@@ -43,11 +43,11 @@ public class HelloFacadeClientImpl implements HelloFacadeClient {
     @Override
     public String doSomething(String address, String something) {
         InvocationInfo<Object[], String> invocationInfo = new InvocationInfo<>(getClass(), "say", new Object[] {address, something});
-        return RpcHandleTemplate.getInstance().handle(invocationInfo, new RpcHandler<Object[], String>() {
+        return SalHandleTemplate.getInstance().handle(invocationInfo, new SalHandler<Object[], String>() {
             @Override
             public boolean checkParams(Object[] params) {
-                RpcAssertUtil.assertParam(params[0] != null, "address");
-                RpcAssertUtil.assertParam(params[1] != null, "something");
+                SalAssertUtil.assertParam(params[0] != null, "address");
+                SalAssertUtil.assertParam(params[1] != null, "something");
                 return true;
             }
 
